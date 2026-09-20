@@ -7,375 +7,120 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="theme-color" content="#f5f5f7" />
   <title>Emergency Trainer</title>
-  <style>
-    :root{
-      --bg:#f5f5f7;
-      --panel:#ffffff;
-      --panel-soft:#fbfbfd;
-      --text:#1d1d1f;
-      --muted:#86868b;
-      --line:#e5e5ea;
-      --line-strong:#d2d2d7;
-      --accent:#f2c94c;
-      --accent-soft:#fff8df;
-      --accent-ink:#6e5710;
-      --ok:#24845b;
-      --ok-soft:#f0faf5;
-      --bad:#c43b32;
-      --bad-soft:#fff3f2;
-      --shadow:0 10px 32px rgba(0,0,0,.055);
-      --shadow-soft:0 1px 3px rgba(0,0,0,.035);
-    }
-    html[data-theme="dark"]{
-      --bg:#000000;
-      --panel:#1c1c1e;
-      --panel-soft:#242426;
-      --text:#f5f5f7;
-      --muted:#98989d;
-      --line:#38383a;
-      --line-strong:#48484a;
-      --accent:#f2c94c;
-      --accent-soft:#302a17;
-      --accent-ink:#f5d767;
-      --ok:#66c79a;
-      --ok-soft:#173126;
-      --bad:#ff8178;
-      --bad-soft:#351e1d;
-      --shadow:0 12px 34px rgba(0,0,0,.32);
-      --shadow-soft:0 1px 4px rgba(0,0,0,.22);
-    }
-    *{box-sizing:border-box}
-    html{-webkit-text-size-adjust:100%;background:var(--bg);color-scheme:light}
-    html[data-theme="dark"]{color-scheme:dark}
-    body{
-      margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,"Helvetica Neue",Arial,sans-serif;
-      -webkit-font-smoothing:antialiased;
-      padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    }
-    button,input,select,textarea{font:inherit;-webkit-tap-highlight-color:transparent}
-    button{color:inherit}
-    .app{max-width:1120px;margin:0 auto;padding:20px 18px 48px}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
-    .brand{display:flex;align-items:center;gap:11px;min-width:0}
-    .brandmark{
-      width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:none;
-      background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow-soft);
-      color:var(--text);font-size:13px;font-weight:750;letter-spacing:-.02em;position:relative;overflow:hidden
-    }
-    .brandmark:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--accent)}
-    .brandtext{min-width:0}
-    .brandtext strong{display:block;font-size:16px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .brandtext span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .iconbtn,.primary,.secondary,.ghost,.smallbtn,.backbtn{
-      border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);
-      min-height:42px;padding:0 13px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-soft)
-    }
-    .iconbtn:hover,.secondary:hover,.ghost:hover,.smallbtn:hover,.backbtn:hover{background:var(--panel-soft)}
-    .primary{background:var(--text);color:var(--panel);border-color:var(--text);box-shadow:none}
-    html[data-theme="dark"] .primary{background:#f5f5f7;color:#1d1d1f;border-color:#f5f5f7}
-
-    .home,.trainer,.statsView{display:none}
-    .home.active,.trainer.active,.statsView.active{display:block}
-
-    .hero{
-      background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:34px 32px 28px;
-      box-shadow:var(--shadow);margin-bottom:22px;position:relative;overflow:hidden
-    }
-    .hero:before{content:"";position:absolute;top:0;left:32px;width:52px;height:5px;border-radius:0 0 6px 6px;background:var(--accent)}
-    .eyebrow{display:none}
-    h1{font-size:clamp(36px,7vw,64px);line-height:.98;letter-spacing:-.055em;margin:4px 0 12px;max-width:820px;font-weight:760}
-    .hero p{margin:0;color:var(--muted);font-size:15px;line-height:1.55;max-width:720px}
-    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:26px}
-    .stat{background:var(--panel-soft);border:1px solid var(--line);border-radius:16px;padding:14px 15px}
-    .stat b{display:block;font-size:22px;font-weight:700;letter-spacing:-.03em}
-    .stat span{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.35}
-
-    .sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:24px 2px 12px}
-    .sectionhead h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.025em}
-    .sectionhead p{margin:4px 0 0;color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .card{
-      position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:22px;
-      padding:20px;min-height:146px;cursor:pointer;box-shadow:var(--shadow-soft);
-      transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;touch-action:manipulation
-    }
-    .card:hover{transform:translateY(-1px);border-color:var(--line-strong);box-shadow:var(--shadow)}
-    .card:active{transform:scale(.993)}
-    .cardtop{display:flex;justify-content:flex-end;gap:8px;align-items:flex-start;min-height:28px}
-    .tag{font-size:11px;font-weight:650;color:var(--muted);background:var(--panel-soft);padding:6px 8px;border-radius:999px;white-space:nowrap;border:1px solid var(--line)}
-    .tag.mastered{color:var(--ok);background:var(--ok-soft);border-color:transparent}
-    .card h3{font-size:17px;line-height:1.28;margin:10px 0 20px;letter-spacing:-.018em;font-weight:690;max-width:90%}
-    .card p{display:none}
-    .cardbottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto}
-    .steps{font-size:12px;color:var(--muted);font-weight:600}
-    .miniProgress{height:5px;flex:1;max-width:132px;background:#ececf0;border-radius:999px;overflow:hidden}
-    html[data-theme="dark"] .miniProgress{background:#343438}
-    .miniProgress span{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .25s ease}
-    .helperNote{margin:18px 3px 0;color:var(--muted);font-size:11px;line-height:1.55}
-
-    .panel{background:var(--panel);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
-    .trainerHeader,.statsHeader{padding:18px 20px 0}
-    .navrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .counter{font-size:12px;font-weight:650;color:var(--muted);background:var(--panel-soft);border:1px solid var(--line);padding:8px 10px;border-radius:999px}
-    .titleblock{padding:24px 2px 18px}
-    .titleblock .category{display:none}
-    .titleblock h2{margin:0 0 9px;font-size:clamp(29px,6vw,46px);line-height:1.02;letter-spacing:-.045em;font-weight:750;max-width:800px}
-    .titleblock p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;max-width:760px}
-
-    .explainBox{margin:0 20px 18px;padding:17px 18px;border-radius:18px;border:1px solid var(--line);background:var(--panel-soft)}
-    .explainBox b{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.055em}
-    .explainBox p{margin:0;color:var(--text);font-size:14px;line-height:1.68}
-    .explainBox .term,.guideContent .term{font-weight:750;color:var(--text)}
-
-    .progressWrap{padding:0 20px 20px}
-    .progressMeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--muted);font-weight:600;gap:8px;flex-wrap:wrap}
-    .progressTrack{height:7px;background:#ececf0;border-radius:999px;overflow:hidden}
-    html[data-theme="dark"] .progressTrack{background:#343438}
-    .progressBar{height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .25s ease}
-    .questionArea{border-top:1px solid var(--line);padding:24px 20px 24px;background:var(--panel)}
-    .completedList{display:grid;gap:8px;margin-bottom:18px}
-    .doneItem{display:flex;align-items:flex-start;gap:10px;background:var(--ok-soft);border:1px solid transparent;border-radius:14px;padding:10px 12px;font-size:12px;color:var(--text);line-height:1.45}
-    .doneNum{display:grid;place-items:center;width:22px;height:22px;flex:none;border-radius:999px;background:var(--panel);font-weight:700;color:var(--ok);border:1px solid var(--line)}
-    .prompt{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.065em;margin-bottom:8px}
-    .question{font-size:clamp(21px,4vw,29px);font-weight:720;letter-spacing:-.03em;margin-bottom:17px}
-    .choices{display:grid;gap:10px}
-    .choice{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel-soft);border-radius:15px;padding:16px;min-height:58px;color:var(--text);font-weight:600;line-height:1.4;cursor:pointer;box-shadow:none;transition:transform .12s ease,border-color .12s ease,background .12s ease;touch-action:manipulation}
-    .choice:hover{border-color:var(--line-strong);background:var(--panel)}
-    .choice:active{transform:scale(.995)}
-    .choice.correct{border-color:#9bd1b8;background:var(--ok-soft);color:var(--text)}
-    .choice.wrong{border-color:#efb0aa;background:var(--bad-soft);color:var(--text)}
-    .choice:disabled{cursor:default}
-    .feedback{display:none;margin-top:12px;border-radius:13px;padding:12px 14px;font-size:13px;font-weight:600;line-height:1.45}
-    .feedback.show{display:block}
-    .feedback.good{background:var(--ok-soft);color:var(--ok);border:1px solid transparent}
-    .feedback.bad{background:var(--bad-soft);color:var(--bad);border:1px solid transparent}
-
-    .complete{display:none;text-align:center;padding:30px 20px;border-top:1px solid var(--line)}
-    .complete.show{display:block}
-    .completeIcon{width:62px;height:62px;border-radius:18px;background:var(--panel-soft);display:grid;place-items:center;margin:0 auto 14px;font-size:27px;color:var(--ok);border:1px solid var(--line)}
-    .complete h3{font-size:27px;margin:0 0 7px;letter-spacing:-.035em;font-weight:720}
-    .complete p{color:var(--muted);margin:0 auto 18px;max-width:560px;line-height:1.55;font-size:14px}
-    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .primary,.secondary,.ghost{min-height:46px;padding:0 16px}
-    .secondary{background:var(--panel-soft)}
-    .sequenceReview{margin:18px auto 0;max-width:740px;text-align:left;display:grid;gap:8px}
-    .reviewItem{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:var(--panel-soft);font-size:12px;line-height:1.45}
-    .reviewNum{font-weight:700;color:var(--muted);min-width:22px}
-
-    .guide{margin-top:22px}
-    .guideGrid{display:grid;gap:10px}
-    .guide details{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px 17px;box-shadow:var(--shadow-soft)}
-    .guide summary{cursor:pointer;list-style:none;font-weight:650;display:flex;align-items:center;justify-content:space-between;gap:12px;letter-spacing:-.01em}
-    .guide summary::-webkit-details-marker{display:none}
-    .guide summary span{color:var(--muted);font-size:12px;font-weight:600}
-    .guideContent{padding-top:11px;color:var(--text);font-size:14px;line-height:1.7}
-    .guideContent:before{content:"Ezber mantığı";display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;margin-bottom:7px}
-
-    .statsBody{padding:18px 20px 26px}
-    .statsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .statsCard{background:var(--panel-soft);border:1px solid var(--line);border-radius:16px;padding:15px}
-    .statsCard b{display:block;font-size:24px;font-weight:700;letter-spacing:-.035em}
-    .statsCard span{display:block;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.4}
-    .statsSubsection{margin-top:20px}
-    .statsSubsection h3{margin:0 0 10px;font-size:17px;font-weight:700;letter-spacing:-.02em}
-    .tableList{display:grid;gap:8px}
-    .tableRow{display:grid;grid-template-columns:minmax(0,1.8fr) repeat(4,minmax(0,.7fr));gap:8px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
-    .tableRow.head{background:var(--panel-soft);font-size:11px;font-weight:700;color:var(--muted)}
-    .tableRow div{font-size:13px;line-height:1.4}
-    .tableRow .procName{font-weight:600}
-    .muted{color:var(--muted)}
-
-    .resetOverlay{position:fixed;inset:0;display:none;place-items:center;background:rgba(245,245,247,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:30;padding:20px}
-    html[data-theme="dark"] .resetOverlay{background:rgba(0,0,0,.62)}
-    .resetOverlay.show{display:grid}
-    .resetToast{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;padding:18px 20px;text-align:center;max-width:370px}
-    .resetToast b{display:block;color:var(--bad);font-size:17px;margin-bottom:5px}
-    .resetToast span{color:var(--muted);font-size:13px;line-height:1.5}
-
-    @media (max-width:900px){
-      .summary,.statsGrid{grid-template-columns:repeat(2,1fr)}
-      .grid{grid-template-columns:1fr}
-      .tableRow{grid-template-columns:minmax(0,1.6fr) repeat(2,minmax(0,.8fr))}
-      .tableRow div:nth-child(4),.tableRow div:nth-child(5){display:none}
-    }
-    @media (max-width:720px){
-      .app{padding:13px 11px 34px}
-      .topbar{align-items:flex-start;flex-direction:column;margin-bottom:14px}
-      .toolbar{width:100%;justify-content:flex-start}
-      .brandtext span{display:none}
-      .hero{padding:28px 20px 22px;border-radius:22px}
-      .hero:before{left:20px}
-      h1{font-size:clamp(38px,13vw,54px)}
-      .trainerHeader,.statsHeader,.questionArea,.progressWrap,.statsBody{padding-left:14px;padding-right:14px}
-      .explainBox{margin-left:14px;margin-right:14px}
-      .panel{border-radius:22px}
-      .choice{font-size:15px;padding:15px 14px}
-      .card{min-height:132px;padding:17px}
-    }
-    @media (max-width:420px){
-      .summary,.statsGrid{grid-template-columns:1fr 1fr}
-      .stat b,.statsCard b{font-size:20px}
-      .iconbtn,.smallbtn{padding:0 11px}
-      .brandmark{width:40px;height:40px}
-    }
-    @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-  </style>
-
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Emergency Trainer" />
   <meta name="application-name" content="Emergency Trainer" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <style>
+    :root{
+      --bg:#f5f5f7;--panel:#fff;--panel-soft:#fbfbfd;--text:#1d1d1f;--muted:#86868b;
+      --line:#e5e5ea;--line-strong:#d2d2d7;--accent:#e6b928;--accent-soft:#fff9e5;
+      --ok:#23875c;--ok-soft:#edf8f2;--bad:#c63830;--bad-soft:#fff1f0;
+      --shadow:0 14px 38px rgba(0,0,0,.055);--shadow-soft:0 1px 3px rgba(0,0,0,.045);
+    }
+    html[data-theme="dark"]{
+      --bg:#000;--panel:#1c1c1e;--panel-soft:#242426;--text:#f5f5f7;--muted:#98989d;
+      --line:#38383a;--line-strong:#4a4a4d;--accent:#f2c94c;--accent-soft:#312b17;
+      --ok:#66c79a;--ok-soft:#173126;--bad:#ff8178;--bad-soft:#351e1d;
+      --shadow:0 14px 40px rgba(0,0,0,.34);--shadow-soft:0 1px 4px rgba(0,0,0,.24);
+    }
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%;background:var(--bg);color-scheme:light}
+    html[data-theme="dark"]{color-scheme:dark}
+    body{margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,"Helvetica Neue",Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+    button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+    .app{max-width:1120px;margin:0 auto;padding:18px 18px 48px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:11px;min-width:0}.brandmark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow-soft);font-size:14px;font-weight:800;letter-spacing:-.03em;position:relative;overflow:hidden}.brandmark:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--accent)}
+    .brandtext strong{display:block;font-size:17px;font-weight:760;letter-spacing:-.025em}.brandtext span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .iconbtn,.primary,.secondary,.smallbtn,.backbtn{border-radius:12px;border:1px solid var(--line);background:var(--panel);min-height:42px;padding:0 13px;font-weight:650;cursor:pointer;box-shadow:var(--shadow-soft)}
+    .iconbtn:hover,.secondary:hover,.smallbtn:hover,.backbtn:hover{background:var(--panel-soft)}
+    .primary{background:var(--text);color:var(--panel);border-color:var(--text);box-shadow:none;font-weight:720}
+    html[data-theme="dark"] .primary{background:#f5f5f7;color:#1d1d1f;border-color:#f5f5f7}
+    .home,.trainer,.statsView{display:none}.home.active,.trainer.active,.statsView.active{display:block}
+
+    .hero{background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:34px 32px 28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .hero:before{content:"";position:absolute;top:0;left:32px;width:54px;height:5px;border-radius:0 0 6px 6px;background:var(--accent)}
+    h1{font-size:clamp(39px,7vw,66px);line-height:.97;letter-spacing:-.06em;margin:3px 0 12px;max-width:860px;font-weight:820}.hero p{margin:0;color:var(--muted);font-size:15px;line-height:1.58;max-width:720px;font-weight:480}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:26px}.stat{background:var(--panel-soft);border:1px solid var(--line);border-radius:17px;padding:15px}.stat b{display:block;font-size:23px;font-weight:780;letter-spacing:-.04em}.stat span{display:block;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.35;font-weight:560}
+
+    .todayCard{margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px 20px;box-shadow:var(--shadow-soft);display:grid;grid-template-columns:1.2fr repeat(4,.7fr);gap:12px;align-items:center}.todayLead b{font-size:18px;font-weight:780;letter-spacing:-.025em}.todayLead span{display:block;color:var(--muted);font-size:12px;margin-top:3px}.todayMetric b{display:block;font-size:20px;font-weight:760;letter-spacing:-.03em}.todayMetric span{font-size:11px;color:var(--muted);font-weight:560}
+
+    .sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:25px 2px 12px}.sectionhead h2{margin:0;font-size:22px;font-weight:780;letter-spacing:-.03em}.sectionhead p{margin:4px 0 0;color:var(--muted);font-size:13px;font-weight:480}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:20px;min-height:158px;box-shadow:var(--shadow-soft);transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;touch-action:manipulation;cursor:pointer}.card:hover{transform:translateY(-1px);border-color:var(--line-strong);box-shadow:var(--shadow)}.card:active{transform:scale(.994)}
+    .cardtop{display:flex;justify-content:flex-end;gap:7px;align-items:flex-start;min-height:28px}.tag{font-size:10.5px;font-weight:700;color:var(--muted);background:var(--panel-soft);padding:6px 8px;border-radius:999px;white-space:nowrap;border:1px solid var(--line)}.tag.perfect{color:var(--ok);background:var(--ok-soft);border-color:transparent}.tag.review{color:var(--bad);background:var(--bad-soft);border-color:transparent}
+    .card h3{font-size:18px;line-height:1.25;margin:11px 0 21px;letter-spacing:-.025em;font-weight:760;max-width:94%}.cardbottom{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.statusBlock{min-width:0}.steps{display:block;font-size:12px;color:var(--muted);font-weight:650;margin-bottom:8px}.miniProgress{height:6px;background:#e9e9ed;border-radius:999px;overflow:hidden;width:100%}html[data-theme="dark"] .miniProgress{background:#343438}.miniProgress span{display:block;height:100%;border-radius:999px;background:var(--accent);transition:width .25s ease}.miniProgress.mastered span{background:var(--ok)}.miniProgress.error span{background:var(--bad)}.miniProgress.idle span{background:#c8c8cd}.quickBtn{border:0;background:var(--panel-soft);border:1px solid var(--line);border-radius:11px;min-height:36px;padding:0 11px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}.quickBtn:hover{background:var(--panel)}
+
+    .weakList{display:grid;gap:9px}.weakRow{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:13px 15px;box-shadow:var(--shadow-soft);cursor:pointer}.weakRank{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--bad-soft);color:var(--bad);font-size:12px;font-weight:800}.weakMain b{display:block;font-size:13px;font-weight:740;letter-spacing:-.012em}.weakMain span{display:block;color:var(--muted);font-size:11px;margin-top:3px}.weakCount{font-size:12px;color:var(--bad);font-weight:760}.emptyWeak{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:16px;color:var(--muted);font-size:13px}
+
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}.trainerHeader,.statsHeader{padding:18px 20px 0}.navrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.counter{font-size:12px;font-weight:700;color:var(--muted);background:var(--panel-soft);border:1px solid var(--line);padding:8px 10px;border-radius:999px}.titleblock{padding:24px 2px 18px}.titleblock h2{margin:0 0 9px;font-size:clamp(31px,6vw,48px);line-height:1.01;letter-spacing:-.052em;font-weight:820;max-width:850px}.titleblock p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;max-width:760px;font-weight:500}
+    .explainBox{margin:0 20px 18px;padding:18px;border-radius:18px;border:1px solid var(--line);background:var(--panel-soft)}.explainBox>b{display:block;font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:760;text-transform:uppercase;letter-spacing:.065em}.explainBox p{margin:0;font-size:14px;line-height:1.7;font-weight:470}.term{font-weight:780}
+    .progressWrap{padding:0 20px 20px}.progressMeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--muted);font-weight:650;gap:8px;flex-wrap:wrap}.progressTrack{height:7px;background:#ececf0;border-radius:999px;overflow:hidden}html[data-theme="dark"] .progressTrack{background:#343438}.progressBar{height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .25s ease}.progressBar.error{background:var(--bad)}
+    .questionArea{border-top:1px solid var(--line);padding:24px 20px;background:var(--panel)}.completedList{display:grid;gap:8px;margin-bottom:18px}.doneItem{display:flex;align-items:flex-start;gap:10px;background:var(--ok-soft);border-radius:14px;padding:10px 12px;font-size:12px;line-height:1.45;font-weight:560}.doneNum{display:grid;place-items:center;width:22px;height:22px;flex:none;border-radius:999px;background:var(--panel);font-weight:760;color:var(--ok);border:1px solid var(--line)}.prompt{font-size:11px;color:var(--muted);font-weight:760;letter-spacing:.07em;margin-bottom:8px}.question{font-size:clamp(22px,4vw,30px);font-weight:790;letter-spacing:-.035em;margin-bottom:17px}.choices{display:grid;gap:10px}.choice{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel-soft);border-radius:15px;padding:16px;min-height:58px;font-weight:650;line-height:1.42;cursor:pointer}.choice:hover{border-color:var(--line-strong);background:var(--panel)}.choice.correct{border-color:#9bd1b8;background:var(--ok-soft)}.choice.wrong{border-color:#efb0aa;background:var(--bad-soft)}.choice:disabled{cursor:default}.feedback{display:none;margin-top:12px;border-radius:13px;padding:12px 14px;font-size:13px;font-weight:650}.feedback.show{display:block}.feedback.good{background:var(--ok-soft);color:var(--ok)}.feedback.bad{background:var(--bad-soft);color:var(--bad)}
+
+    .complete{display:none;text-align:center;padding:34px 20px 30px;border-top:1px solid var(--line)}.complete.show{display:block}.completeIcon{width:68px;height:68px;border-radius:22px;background:var(--ok-soft);display:grid;place-items:center;margin:0 auto 13px;font-size:30px;color:var(--ok);border:1px solid transparent}.completionKicker{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:8px}.complete h3{font-size:31px;margin:0 0 8px;letter-spacing:-.045em;font-weight:820}.complete p{color:var(--muted);margin:0 auto 18px;max-width:560px;line-height:1.55;font-size:14px}.completeStats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 auto 18px}.completeChip{background:var(--panel-soft);border:1px solid var(--line);padding:8px 11px;border-radius:999px;font-size:11px;font-weight:700;color:var(--muted)}.completeChip.good{color:var(--ok);background:var(--ok-soft);border-color:transparent}.completeChip.bad{color:var(--bad);background:var(--bad-soft);border-color:transparent}.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.sequenceReview{margin:18px auto 0;max-width:740px;text-align:left;display:grid;gap:8px}.reviewItem{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:var(--panel-soft);font-size:12px;line-height:1.45}.reviewNum{font-weight:760;color:var(--muted);min-width:22px}
+
+    .guide{margin-top:24px}.guideGrid{display:grid;gap:10px}.guide details{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px 17px;box-shadow:var(--shadow-soft)}.guide summary{cursor:pointer;list-style:none;font-weight:720;display:flex;align-items:center;justify-content:space-between;gap:12px;letter-spacing:-.016em}.guide summary::-webkit-details-marker{display:none}.guide summary span{color:var(--muted);font-size:12px;font-weight:600}.guideContent{padding-top:11px;font-size:14px;line-height:1.7}.guideContent:before{content:"Ezber mantığı";display:block;color:var(--muted);font-size:11px;font-weight:760;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
+
+    .statsBody{padding:18px 20px 26px}.statsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.statsCard{background:var(--panel-soft);border:1px solid var(--line);border-radius:16px;padding:15px}.statsCard b{display:block;font-size:25px;font-weight:800;letter-spacing:-.04em}.statsCard span{display:block;color:var(--muted);font-size:11px;margin-top:4px}.statsSubsection{margin-top:22px}.statsSubsection h3{margin:0 0 10px;font-size:18px;font-weight:780;letter-spacing:-.025em}.historyList{display:grid;gap:8px}.historyRow{display:grid;grid-template-columns:minmax(0,1.8fr) .65fr .7fr 1.15fr 1fr;gap:9px;align-items:center;padding:13px 14px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}.historyRow.head{background:var(--panel-soft);font-size:11px;font-weight:740;color:var(--muted)}.historyRow div{font-size:12px;line-height:1.4}.historyRow .procName{font-weight:700;font-size:13px}.historyError{color:var(--bad);font-weight:700}
+
+    .resetOverlay,.reviewOverlay{position:fixed;inset:0;display:none;place-items:center;background:rgba(245,245,247,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:40;padding:18px}html[data-theme="dark"] .resetOverlay,html[data-theme="dark"] .reviewOverlay{background:rgba(0,0,0,.68)}.resetOverlay.show,.reviewOverlay.show{display:grid}.resetToast{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;padding:19px 20px;text-align:center;max-width:380px}.resetToast b{display:block;color:var(--bad);font-size:18px;font-weight:780;margin-bottom:5px}.resetToast span{color:var(--muted);font-size:13px;line-height:1.5}
+    .reviewModal{width:min(720px,100%);max-height:min(82vh,760px);overflow:auto;background:var(--panel);border:1px solid var(--line);box-shadow:0 22px 70px rgba(0,0,0,.16);border-radius:26px;padding:20px}.reviewTop{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}.reviewTitle{font-size:27px;font-weight:820;letter-spacing:-.04em;line-height:1.04}.closeBtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel-soft);font-size:19px;cursor:pointer}.reviewLogic{background:var(--panel-soft);border:1px solid var(--line);border-radius:16px;padding:15px;font-size:13px;line-height:1.65;margin-bottom:12px}.reviewSteps{display:grid;gap:8px}.quickStep{display:flex;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.quickStepNum{font-size:12px;color:var(--muted);font-weight:800;min-width:20px}.quickStepText{font-size:13px;font-weight:680;line-height:1.45}
+
+    @media(max-width:900px){.summary,.statsGrid{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.todayCard{grid-template-columns:1fr 1fr 1fr}.todayLead{grid-column:1/-1}.historyRow{grid-template-columns:minmax(0,1.7fr) .7fr 1.2fr}.historyRow div:nth-child(3),.historyRow div:nth-child(5){display:none}}
+    @media(max-width:720px){.app{padding:13px 11px 34px}.topbar{align-items:flex-start;flex-direction:column}.toolbar{width:100%;justify-content:flex-start}.brandtext span{display:none}.hero{padding:29px 20px 23px;border-radius:22px}.hero:before{left:20px}h1{font-size:clamp(40px,13vw,56px)}.trainerHeader,.statsHeader,.questionArea,.progressWrap,.statsBody{padding-left:14px;padding-right:14px}.explainBox{margin-left:14px;margin-right:14px}.panel{border-radius:22px}.card{padding:18px}.historyRow{grid-template-columns:minmax(0,1fr) .65fr 1.05fr}.reviewModal{border-radius:22px;padding:17px}}
+    @media(max-width:440px){.summary,.statsGrid{grid-template-columns:1fr 1fr}.todayCard{grid-template-columns:1fr 1fr}.todayLead{grid-column:1/-1}.todayMetric:last-child{grid-column:1/-1}.stat b,.statsCard b{font-size:21px}.cardbottom{grid-template-columns:1fr}.quickBtn{justify-self:start}.weakRow{grid-template-columns:36px minmax(0,1fr)}.weakCount{grid-column:2}.toolbar{gap:6px}.iconbtn{padding:0 10px;font-size:12px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
 </head>
 <body>
 <div class="app">
   <div class="topbar">
-    <div class="brand">
-      <div class="brandmark">BF</div>
-      <div class="brandtext">
-        <strong>Emergency Trainer</strong>
-        <span>Bold Face Memory Trainer</span>
-      </div>
-    </div>
-    <div class="toolbar">
-      <button class="iconbtn" id="statsBtn" type="button">İstatistikler</button>
-      <button class="iconbtn" id="themeBtn" type="button">🌙 Gece modu</button>
-      <button class="iconbtn" id="resetAllBtn" type="button">İlerlemeyi sıfırla</button>
-    </div>
+    <div class="brand"><div class="brandmark">ET</div><div class="brandtext"><strong>Emergency Trainer</strong><span>Bold Face Memory Trainer</span></div></div>
+    <div class="toolbar"><button class="iconbtn" id="statsBtn">İstatistikler</button><button class="iconbtn" id="themeBtn">🌙 Gece modu</button><button class="iconbtn" id="resetAllBtn">Sıfırla</button></div>
   </div>
 
   <main class="home active" id="homeView">
-    <section class="hero">
-      <h1>Emergency Trainer</h1>
-      <p>Bold face adımlarını doğru sırayla öğren. Yanlış cevapta aynı emergency’nin başına dön.</p>
-      <div class="summary">
-        <div class="stat"><b id="totalProcedures">0</b><span>Emergency</span></div>
-        <div class="stat"><b id="masteredCount">0</b><span>En az 1 kez tamamlanan</span></div>
-        <div class="stat"><b id="totalCompletions">0</b><span>Toplam tamamlanan tur</span></div>
-        <div class="stat"><b id="todayAnsweredMini">0</b><span>Bugün çözülen soru</span></div>
-      </div>
+    <section class="hero"><h1>Emergency Trainer</h1><p>Bold face adımlarını doğru sırayla öğren. Yanlış cevapta aynı emergency’nin başına dön.</p>
+      <div class="summary"><div class="stat"><b id="totalProcedures">0</b><span>Emergency</span></div><div class="stat"><b id="masteredCount">0</b><span>Perfect / mastered</span></div><div class="stat"><b id="totalPerfects">0</b><span>Perfect Run</span></div><div class="stat"><b id="todayAnsweredMini">0</b><span>Bugün çözülen soru</span></div></div>
     </section>
 
-    <div class="sectionhead">
-      <div>
-        <h2>Choose an emergency</h2>
-        <p>Bir prosedür seç ve sırayı çalış.</p>
-      </div>
-    </div>
+    <section class="todayCard" aria-label="Bugünün özeti"><div class="todayLead"><b>Today</b><span id="todayLine">Bugünkü çalışma özeti</span></div><div class="todayMetric"><b id="todayAnsweredHome">0</b><span>Soru</span></div><div class="todayMetric"><b id="todayCorrectHome">0</b><span>Doğru</span></div><div class="todayMetric"><b id="todayWrongHome">0</b><span>Yanlış</span></div><div class="todayMetric"><b id="todayAccuracyHome">—</b><span>Başarı</span></div></section>
+
+    <div class="sectionhead"><div><h2>Choose an emergency</h2><p>Bir prosedür seç ve sırayı çalış.</p></div></div>
     <section class="grid" id="cards"></section>
 
-    <section class="guide">
-      <div class="sectionhead">
-        <div>
-          <h2>Emergency logic</h2>
-          <p>Her adımın neden o sırada yapıldığını anlaşılır biçimde öğren.</p>
-        </div>
-      </div>
-      <div class="guideGrid" id="guideGrid"></div>
-    </section>
+    <section id="weakSection"><div class="sectionhead"><div><h2>Weak Areas</h2><p>En çok zorlandığın emergency ve adımlar.</p></div></div><div class="weakList" id="weakList"></div></section>
 
-    <p class="helperNote">Not: Açıklamalar ezberi kolaylaştıran mantık anlatımıdır; checklist metni değildir. Uçuşta geçerli checklist, POH/AFM ve okul prosedürleri esastır.</p>
+    <section class="guide"><div class="sectionhead"><div><h2>Emergency logic</h2><p>Her adımın neden o sırada yapıldığını anlaşılır biçimde öğren.</p></div></div><div class="guideGrid" id="guideGrid"></div></section>
+    <p class="helperNote" style="color:var(--muted);font-size:11px;line-height:1.55;margin:18px 3px 0">Not: Açıklamalar ezberi kolaylaştıran mantık anlatımıdır; checklist metni değildir. Uçuşta geçerli checklist, POH/AFM ve okul prosedürleri esastır.</p>
   </main>
 
-  <main class="trainer" id="trainerView">
-    <section class="panel">
-      <div class="trainerHeader">
-        <div class="navrow">
-          <button class="backbtn" id="backBtn" type="button">← Ana sayfa</button>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-            <button class="smallbtn" id="toggleExplainBtn" type="button">Açıklama</button>
-            <span class="counter" id="stepCounter">1 / 5</span>
-          </div>
-        </div>
-        <div class="titleblock">
-          <div class="category" id="categoryLabel">FIRE</div>
-          <h2 id="trainerTitle">CABIN FIRE</h2>
-          <p id="trainerSubtitle">Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.</p>
-        </div>
-      </div>
-      <div class="explainBox" id="explainBox">
-        <b>Mantık / neden böyle?</b>
-        <p id="explainText"></p>
-      </div>
-      <div class="progressWrap">
-        <div class="progressMeta"><span id="progressText">0 / 5 adım tamam</span><span id="mistakeText">Hata: 0</span></div>
-        <div class="progressTrack"><div class="progressBar" id="progressBar"></div></div>
-      </div>
-      <div class="questionArea" id="questionArea">
-        <div class="completedList" id="completedList"></div>
-        <div class="prompt">SIRADAKİ HAFIZA ADIMI</div>
-        <div class="question" id="questionText">1. adım hangisi?</div>
-        <div class="choices" id="choices"></div>
-        <div class="feedback" id="feedback"></div>
-      </div>
-      <div class="complete" id="completePanel">
-        <div class="completeIcon">✓</div>
-        <h3>Tur tamamlandı.</h3>
-        <p id="completeText">Bu emergency’nin tüm adımlarını doğru sırayla tamamladın.</p>
-        <div class="actions">
-          <button class="primary" id="repeatBtn" type="button">Bir tur daha</button>
-          <button class="secondary" id="menuBtn" type="button">Emergency seç</button>
-        </div>
-        <div class="sequenceReview" id="sequenceReview"></div>
-      </div>
-    </section>
-  </main>
+  <main class="trainer" id="trainerView"><section class="panel">
+    <div class="trainerHeader"><div class="navrow"><button class="backbtn" id="backBtn">← Ana sayfa</button><div style="display:flex;gap:8px;align-items:center"><button class="smallbtn" id="toggleExplainBtn">Açıklama</button><span class="counter" id="stepCounter">1 / 5</span></div></div><div class="titleblock"><h2 id="trainerTitle">CABIN FIRE</h2><p id="trainerSubtitle">Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.</p></div></div>
+    <div class="explainBox" id="explainBox"><b>Mantık / neden böyle?</b><p id="explainText"></p></div>
+    <div class="progressWrap"><div class="progressMeta"><span id="progressText">0 / 5 adım tamam</span><span id="mistakeText">Henüz hata yok</span></div><div class="progressTrack"><div class="progressBar" id="progressBar"></div></div></div>
+    <div class="questionArea" id="questionArea"><div class="completedList" id="completedList"></div><div class="prompt">SIRADAKİ HAFIZA ADIMI</div><div class="question" id="questionText">1. adım hangisi?</div><div class="choices" id="choices"></div><div class="feedback" id="feedback"></div></div>
+    <div class="complete" id="completePanel"><div class="completeIcon">✓</div><div class="completionKicker" id="completionKicker">Perfect Run</div><h3 id="completeTitle">Perfect Run.</h3><p id="completeText"></p><div class="completeStats" id="completeStats"></div><div class="actions"><button class="primary" id="repeatBtn">Bir tur daha</button><button class="secondary" id="menuBtn">Emergency seç</button></div><div class="sequenceReview" id="sequenceReview"></div></div>
+  </section></main>
 
-  <main class="statsView" id="statsView">
-    <section class="panel">
-      <div class="statsHeader">
-        <div class="navrow">
-          <button class="backbtn" id="statsBackBtn" type="button">← Ana sayfa</button>
-          <span class="counter" id="todayDateText">Bugün</span>
-        </div>
-        <div class="titleblock">
-          <div class="category">ÇALIŞMA İSTATİSTİKLERİ</div>
-          <h2>Bugün ne kadar çalıştın?</h2>
-          <p>Bugün çözdüğün soru sayısı, doğru-yanlış dağılımı ve tüm zamanlar toplamların burada görünür.</p>
-        </div>
-      </div>
-      <div class="statsBody">
-        <div class="statsSubsection">
-          <h3>Bugün</h3>
-          <div class="statsGrid">
-            <div class="statsCard"><b id="todayAnswered">0</b><span>Çözülen soru</span></div>
-            <div class="statsCard"><b id="todayCorrect">0</b><span>Doğru</span></div>
-            <div class="statsCard"><b id="todayWrong">0</b><span>Yanlış</span></div>
-            <div class="statsCard"><b id="todayCompleted">0</b><span>Tamamlanan tur</span></div>
-          </div>
-        </div>
-        <div class="statsSubsection">
-          <h3>Tüm zamanlar</h3>
-          <div class="statsGrid">
-            <div class="statsCard"><b id="lifeAnswered">0</b><span>Toplam çözülen soru</span></div>
-            <div class="statsCard"><b id="lifeCorrect">0</b><span>Toplam doğru</span></div>
-            <div class="statsCard"><b id="lifeWrong">0</b><span>Toplam yanlış</span></div>
-            <div class="statsCard"><b id="lifeCompleted">0</b><span>Toplam tamamlanan tur</span></div>
-          </div>
-        </div>
-        <div class="statsSubsection">
-          <h3>Emergency bazında</h3>
-          <div class="tableList" id="statsTable"></div>
-        </div>
-      </div>
-    </section>
-  </main>
+  <main class="statsView" id="statsView"><section class="panel"><div class="statsHeader"><div class="navrow"><button class="backbtn" id="statsBackBtn">← Ana sayfa</button><span class="counter" id="todayDateText">Bugün</span></div><div class="titleblock"><h2>İstatistikler</h2><p>Bugün, tüm zamanlar ve hangi adımda daha çok hata yaptığın.</p></div></div><div class="statsBody">
+    <div class="statsSubsection" style="margin-top:0"><h3>Bugün</h3><div class="statsGrid"><div class="statsCard"><b id="todayAnswered">0</b><span>Çözülen soru</span></div><div class="statsCard"><b id="todayCorrect">0</b><span>Doğru</span></div><div class="statsCard"><b id="todayWrong">0</b><span>Yanlış</span></div><div class="statsCard"><b id="todayCompleted">0</b><span>Tamamlanan tur</span></div></div></div>
+    <div class="statsSubsection"><h3>Tüm zamanlar</h3><div class="statsGrid"><div class="statsCard"><b id="lifeAnswered">0</b><span>Toplam soru</span></div><div class="statsCard"><b id="lifeCorrect">0</b><span>Toplam doğru</span></div><div class="statsCard"><b id="lifeWrong">0</b><span>Toplam yanlış</span></div><div class="statsCard"><b id="lifeCompleted">0</b><span>Tamamlanan tur</span></div></div></div>
+    <div class="statsSubsection"><h3>Hata geçmişi</h3><div class="historyList" id="statsTable"></div></div>
+  </div></section></main>
 </div>
 
-<div class="resetOverlay" id="resetOverlay" aria-live="assertive">
-  <div class="resetToast">
-    <b>Yanlış — başa sardı.</b>
-    <span id="resetMessage">Bu emergency tekrar 1. adımdan başlayacak.</span>
-  </div>
-</div>
+<div class="resetOverlay" id="resetOverlay"><div class="resetToast"><b>Yanlış — başa sardı.</b><span id="resetMessage"></span></div></div>
+<div class="reviewOverlay" id="reviewOverlay"><div class="reviewModal"><div class="reviewTop"><div><div style="font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--muted);margin-bottom:7px">QUICK REVIEW</div><div class="reviewTitle" id="reviewTitle"></div></div><button class="closeBtn" id="closeReviewBtn" aria-label="Kapat">×</button></div><div class="reviewLogic" id="reviewLogic"></div><div class="reviewSteps" id="reviewSteps"></div></div></div>
 
 <script>
 (() => {
   'use strict';
-
   const procedures = [
     {
       id:'takeoff-roll', category:'ENGINE FAILURE', title:'ENGINE FAILURE DURING TAKEOFF ROLL',
@@ -521,466 +266,94 @@
 
   const storageKey = 'tafa-bold-face-trainer-v2';
   const legacyKey = 'tafa-bold-face-trainer-v1';
-
   const $ = id => document.getElementById(id);
-  const homeView = $('homeView');
-  const trainerView = $('trainerView');
-  const statsView = $('statsView');
-  const cards = $('cards');
-  const guideGrid = $('guideGrid');
-  const resetOverlay = $('resetOverlay');
-  const htmlEl = document.documentElement;
+  const homeView=$('homeView'), trainerView=$('trainerView'), statsView=$('statsView'), cards=$('cards'), guideGrid=$('guideGrid'), resetOverlay=$('resetOverlay'), reviewOverlay=$('reviewOverlay'), htmlEl=document.documentElement;
+  let state=loadState(), current=null, currentIndex=0, locked=false;
 
-  let state = loadState();
-  let current = null;
-  let currentIndex = 0;
-  let currentMistakes = 0;
-  let locked = false;
+  function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+  function makeProgress(p){return {completions:0,currentStep:0,mistakes:0,answered:0,correct:0,wrong:0,stepMistakes:Array(p.steps.length).fill(0),perfectRuns:0,status:'idle',runMistakes:0,lastRunMistakes:null}}
+  function makeDefaultProgress(){const o={};procedures.forEach(p=>o[p.id]=makeProgress(p));return o}
+  function makeDefaultAnalytics(){return {todayDate:todayKey(),todayAnswered:0,todayCorrect:0,todayWrong:0,todayCompleted:0,lifetimeAnswered:0,lifetimeCorrect:0,lifetimeWrong:0,lifetimeCompleted:0}}
+  function makeDefaultState(){return {theme:'light',explainOpen:true,progress:makeDefaultProgress(),analytics:makeDefaultAnalytics()}}
 
-  function todayKey(){
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,'0');
-    const day = String(d.getDate()).padStart(2,'0');
-    return `${y}-${m}-${day}`;
+  function migrateProgress(p, old={}){
+    const base=makeProgress(p); const m=Object.assign(base,old||{});
+    if(!Array.isArray(m.stepMistakes)) m.stepMistakes=Array(p.steps.length).fill(0);
+    while(m.stepMistakes.length<p.steps.length)m.stepMistakes.push(0);
+    m.stepMistakes=m.stepMistakes.slice(0,p.steps.length).map(v=>Number(v)||0);
+    if(!m.status || !['idle','active','error','mastered'].includes(m.status)){
+      m.status=m.completions>0?'mastered':((m.mistakes||m.wrong||0)>0?'error':(m.currentStep>0?'active':'idle'));
+    }
+    if(typeof m.runMistakes!=='number')m.runMistakes=0;
+    if(typeof m.perfectRuns!=='number')m.perfectRuns=0;
+    return m;
   }
-
-  function makeDefaultProgress(){
-    const obj = {};
-    procedures.forEach(p => obj[p.id] = { completions:0, currentStep:0, mistakes:0, answered:0, correct:0, wrong:0 });
-    return obj;
-  }
-
-  function makeDefaultAnalytics(){
-    return {
-      todayDate: todayKey(),
-      todayAnswered:0,
-      todayCorrect:0,
-      todayWrong:0,
-      todayCompleted:0,
-      lifetimeAnswered:0,
-      lifetimeCorrect:0,
-      lifetimeWrong:0,
-      lifetimeCompleted:0
-    };
-  }
-
-  function makeDefaultState(){
-    return {
-      theme:'light',
-      explainOpen:true,
-      progress:makeDefaultProgress(),
-      analytics:makeDefaultAnalytics()
-    };
-  }
-
   function loadState(){
-    const base = makeDefaultState();
-    let raw = null;
-    try { raw = JSON.parse(localStorage.getItem(storageKey) || 'null'); } catch(e){}
-
-    if(!raw){
-      try{
-        const legacy = JSON.parse(localStorage.getItem(legacyKey) || 'null');
-        if(legacy && typeof legacy === 'object'){
-          Object.keys(base.progress).forEach(id => {
-            base.progress[id] = Object.assign(base.progress[id], legacy[id] || {});
-          });
-        }
-      }catch(e){}
-      saveState(base);
-      return normalizeToday(base);
-    }
-
-    const merged = {
-      theme: raw.theme || base.theme,
-      explainOpen: typeof raw.explainOpen === 'boolean' ? raw.explainOpen : true,
-      progress: makeDefaultProgress(),
-      analytics: Object.assign(makeDefaultAnalytics(), raw.analytics || {})
-    };
-    Object.keys(merged.progress).forEach(id => {
-      merged.progress[id] = Object.assign(merged.progress[id], raw.progress?.[id] || {});
-    });
-    return normalizeToday(merged);
+    const base=makeDefaultState();let raw=null;try{raw=JSON.parse(localStorage.getItem(storageKey)||'null')}catch(e){}
+    if(!raw){try{const legacy=JSON.parse(localStorage.getItem(legacyKey)||'null');if(legacy){procedures.forEach(p=>base.progress[p.id]=migrateProgress(p,legacy[p.id]))}}catch(e){};saveState(base);return normalizeToday(base)}
+    const merged={theme:raw.theme||'light',explainOpen:typeof raw.explainOpen==='boolean'?raw.explainOpen:true,progress:{},analytics:Object.assign(makeDefaultAnalytics(),raw.analytics||{})};
+    procedures.forEach(p=>merged.progress[p.id]=migrateProgress(p,raw.progress?.[p.id]));return normalizeToday(merged)
   }
+  function normalizeToday(s){if(s.analytics.todayDate!==todayKey()){s.analytics.todayDate=todayKey();s.analytics.todayAnswered=0;s.analytics.todayCorrect=0;s.analytics.todayWrong=0;s.analytics.todayCompleted=0;saveState(s)}return s}
+  function saveState(next=state){try{localStorage.setItem(storageKey,JSON.stringify(next))}catch(e){}}
+  function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  const globalStepBank=[...new Set(procedures.flatMap(p=>p.steps))];
+  function escapeHtml(s){return String(s).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
+  function formatText(s){return escapeHtml(s).replace(/\n/g,'<br>')}
 
-  function normalizeToday(s){
-    if(!s.analytics) s.analytics = makeDefaultAnalytics();
-    if(s.analytics.todayDate !== todayKey()){
-      s.analytics.todayDate = todayKey();
-      s.analytics.todayAnswered = 0;
-      s.analytics.todayCorrect = 0;
-      s.analytics.todayWrong = 0;
-      s.analytics.todayCompleted = 0;
-      saveState(s);
-    }
-    return s;
-  }
+  function applyTheme(){htmlEl.setAttribute('data-theme',state.theme==='dark'?'dark':'light');$('themeBtn').textContent=state.theme==='dark'?'☀️ Gündüz modu':'🌙 Gece modu';document.querySelector('meta[name="theme-color"]')?.setAttribute('content',state.theme==='dark'?'#000000':'#f5f5f7')}
+  function updateExplainVisibility(){$('explainBox').style.display=state.explainOpen?'':'none';$('toggleExplainBtn').textContent=state.explainOpen?'Açıklamayı gizle':'Açıklama'}
+  function dominantError(p){const s=state.progress[p.id];if(!s.stepMistakes?.some(v=>v>0))return null;let idx=0,max=0;s.stepMistakes.forEach((v,i)=>{if(v>max){max=v;idx=i}});return {step:idx+1,count:max}}
+  function totalWrong(s){return Number(s.wrong||s.mistakes||0)}
 
-  function saveState(nextState = state){
-    try{ localStorage.setItem(storageKey, JSON.stringify(nextState)); }catch(e){}
-  }
-
-  function shuffle(arr){
-    const a = arr.slice();
-    for(let i=a.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [a[i],a[j]]=[a[j],a[i]];
-    }
-    return a;
-  }
-
-  function allSteps(){
-    return [...new Set(procedures.flatMap(p => p.steps))];
-  }
-  const globalStepBank = allSteps();
-
-  function applyTheme(){
-    htmlEl.setAttribute('data-theme', state.theme === 'dark' ? 'dark' : 'light');
-    $('themeBtn').textContent = state.theme === 'dark' ? '☀️ Gündüz modu' : '🌙 Gece modu';
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if(meta) meta.setAttribute('content', state.theme === 'dark' ? '#000000' : '#f5f5f7');
-  }
-
-  function updateExplainVisibility(){
-    $('explainBox').style.display = state.explainOpen ? '' : 'none';
-    $('toggleExplainBtn').textContent = state.explainOpen ? 'Açıklamayı gizle' : 'Açıklama';
-  }
+  function renderToday(){state=normalizeToday(state);const a=state.analytics, accuracy=a.todayAnswered?Math.round((a.todayCorrect/a.todayAnswered)*100):null;$('todayAnsweredHome').textContent=a.todayAnswered;$('todayCorrectHome').textContent=a.todayCorrect;$('todayWrongHome').textContent=a.todayWrong;$('todayAccuracyHome').textContent=accuracy===null?'—':`${accuracy}%`;$('todayLine').textContent=a.todayAnswered?`${a.todayCompleted} tur tamamlandı · ${a.todayWrong===0?'hatasız gidiyor':'hata geçmişi kaydediliyor'}`:'Bugün henüz soru çözmedin.'}
 
   function renderHome(){
-    cards.innerHTML = '';
-    procedures.forEach(p => {
-      const s = state.progress[p.id];
-      const pct = Math.min(100, Math.round((s.currentStep / p.steps.length) * 100));
-      const btn = document.createElement('button');
-      btn.className = 'card';
-      btn.type = 'button';
-      btn.innerHTML = `
-        <div class="cardtop">
-          ${s.completions>0 ? `<span class="tag mastered">✓ ${s.completions} tur</span>` : ''}
-          <span class="tag">${p.steps.length} adım</span>
-        </div>
-        <h3>${escapeHtml(p.title)}</h3>
-        <div class="cardbottom">
-          <span class="steps">${s.currentStep>0 ? s.currentStep+' / '+p.steps.length+' ilerleme' : 'Başlamak için dokun'}</span>
-          <div class="miniProgress"><span style="width:${pct}%"></span></div>
-        </div>`;
-      btn.addEventListener('click', () => openProcedure(p.id));
-      cards.appendChild(btn);
+    cards.innerHTML='';
+    procedures.forEach(p=>{const s=state.progress[p.id];let cls='idle',pct=0,statusText='Başlamak için dokun';
+      if(s.status==='error'){cls='error';pct=100;statusText=s.completions>0?'Review needed':'Hata yapıldı · tekrar et'}
+      else if(s.status==='mastered'){cls='mastered';pct=100;statusText=s.perfectRuns>0?`Perfect Run × ${s.perfectRuns}`:'Tamamlandı'}
+      else if(s.currentStep>0){cls='active';pct=Math.round((s.currentStep/p.steps.length)*100);statusText=`${s.currentStep} / ${p.steps.length} ilerleme`}
+      const el=document.createElement('article');el.className='card';el.tabIndex=0;el.setAttribute('role','button');el.innerHTML=`<div class="cardtop">${s.status==='error'?'<span class="tag review">Review</span>':''}${s.perfectRuns>0?`<span class="tag perfect">Perfect × ${s.perfectRuns}</span>`:''}<span class="tag">${p.steps.length} adım</span></div><h3>${escapeHtml(p.title)}</h3><div class="cardbottom"><div class="statusBlock"><span class="steps">${statusText}</span><div class="miniProgress ${cls}"><span style="width:${pct}%"></span></div></div><button class="quickBtn" type="button">Quick Review</button></div>`;
+      el.addEventListener('click',()=>openProcedure(p.id));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProcedure(p.id)}});el.querySelector('.quickBtn').addEventListener('click',e=>{e.stopPropagation();openQuickReview(p.id)});cards.appendChild(el)
     });
-    renderGuide();
-    updateSummary();
+    renderWeakAreas();renderGuide();updateSummary();renderToday();
   }
 
-  function renderGuide(){
-    guideGrid.innerHTML = '';
-    procedures.forEach(p => {
-      const d = document.createElement('details');
-      d.innerHTML = `
-        <summary>${escapeHtml(p.title)} <span>${p.steps.length} adım</span></summary>
-        <div class="guideContent">${p.explanation}</div>`;
-      guideGrid.appendChild(d);
-    });
-  }
+  function renderWeakAreas(){const list=$('weakList');list.innerHTML='';const ranked=procedures.map(p=>({p,s:state.progress[p.id],d:dominantError(p)})).filter(x=>totalWrong(x.s)>0).sort((a,b)=>totalWrong(b.s)-totalWrong(a.s)).slice(0,3);if(!ranked.length){list.innerHTML='<div class="emptyWeak">Henüz weak area yok. Yanlış yaptığın adımlar burada otomatik görünecek.</div>';return}ranked.forEach((x,i)=>{const row=document.createElement('div');row.className='weakRow';row.innerHTML=`<div class="weakRank">${i+1}</div><div class="weakMain"><b>${escapeHtml(x.p.title)}</b><span>${x.d?`En çok ${x.d.step}. adımda hata · ${x.d.count} kez`:'Eski hata kaydı var; adım geçmişi yeni sürümden itibaren tutuluyor.'}</span></div><div class="weakCount">${totalWrong(x.s)} yanlış</div>`;row.addEventListener('click',()=>openProcedure(x.p.id));list.appendChild(row)})}
+  function renderGuide(){guideGrid.innerHTML='';procedures.forEach(p=>{const d=document.createElement('details');d.innerHTML=`<summary>${escapeHtml(p.title)} <span>${p.steps.length} adım</span></summary><div class="guideContent">${p.explanation}</div>`;guideGrid.appendChild(d)})}
+  function updateSummary(){const mastered=procedures.filter(p=>state.progress[p.id].status==='mastered').length;const perfects=procedures.reduce((n,p)=>n+(state.progress[p.id].perfectRuns||0),0);$('totalProcedures').textContent=procedures.length;$('masteredCount').textContent=mastered;$('totalPerfects').textContent=perfects;$('todayAnsweredMini').textContent=state.analytics.todayAnswered}
 
-  function updateSummary(){
-    const mastered = procedures.filter(p => (state.progress[p.id]?.completions || 0) > 0).length;
-    const completions = procedures.reduce((sum,p)=>sum+(state.progress[p.id]?.completions||0),0);
-    $('totalProcedures').textContent = procedures.length;
-    $('masteredCount').textContent = mastered;
-    $('totalCompletions').textContent = completions;
-    $('todayAnsweredMini').textContent = state.analytics.todayAnswered;
-  }
+  function openQuickReview(id){const p=procedures.find(x=>x.id===id);if(!p)return;$('reviewTitle').textContent=p.title;$('reviewLogic').innerHTML=p.explanation;const wrap=$('reviewSteps');wrap.innerHTML='';p.steps.forEach((step,i)=>{const r=document.createElement('div');r.className='quickStep';r.innerHTML=`<span class="quickStepNum">${i+1}.</span><span class="quickStepText">${formatText(step)}</span>`;wrap.appendChild(r)});reviewOverlay.classList.add('show')}
+  function closeQuickReview(){reviewOverlay.classList.remove('show')}
 
-  function openProcedure(id){
-    current = procedures.find(p => p.id === id);
-    if(!current) return;
-    const s = state.progress[id];
-    currentIndex = Math.min(Math.max(0, s.currentStep || 0), current.steps.length - 1);
-    currentMistakes = s.mistakes || 0;
-    if(s.currentStep >= current.steps.length) currentIndex = 0;
-    showView('trainer');
-    $('trainerTitle').textContent = current.title;
-    $('trainerSubtitle').textContent = 'Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.';
-    $('explainText').innerHTML = current.explanation;
-    $('completePanel').classList.remove('show');
-    $('questionArea').style.display = '';
-    updateExplainVisibility();
-    window.scrollTo({top:0, behavior:'auto'});
-    renderQuestion();
-  }
+  function openProcedure(id){current=procedures.find(p=>p.id===id);if(!current)return;const s=state.progress[id];currentIndex=Math.min(Math.max(0,s.currentStep||0),current.steps.length-1);if(s.currentStep>=current.steps.length)currentIndex=0;showView('trainer');$('trainerTitle').textContent=current.title;$('trainerSubtitle').textContent='Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.';$('explainText').innerHTML=current.explanation;$('completePanel').classList.remove('show');$('questionArea').style.display='';updateExplainVisibility();renderQuestion();window.scrollTo({top:0,behavior:'auto'})}
+  function errorHistoryText(){if(!current)return 'Henüz hata yok';const d=dominantError(current);return d?`En çok hata: ${d.step}. adım · ${d.count}×`:'Henüz adım bazlı hata yok'}
+  function renderQuestion(){if(!current)return;locked=false;$('feedback').className='feedback';$('feedback').textContent='';$('stepCounter').textContent=`${currentIndex+1} / ${current.steps.length}`;$('progressText').textContent=`${currentIndex} / ${current.steps.length} adım tamam`;$('mistakeText').textContent=errorHistoryText();const bar=$('progressBar');bar.classList.toggle('error',state.progress[current.id].status==='error');bar.style.width=`${(currentIndex/current.steps.length)*100}%`;$('questionText').textContent=`${currentIndex+1}. adım hangisi?`;renderCompleted();renderChoices()}
+  function renderCompleted(){const list=$('completedList');list.innerHTML='';for(let i=0;i<currentIndex;i++){const item=document.createElement('div');item.className='doneItem';item.innerHTML=`<span class="doneNum">${i+1}</span><span>${formatText(current.steps[i])}</span>`;list.appendChild(item)}}
+  function buildOptions(){const correct=current.steps[currentIndex],candidates=[];current.steps.forEach((step,idx)=>{if(step!==correct)candidates.push({step,distance:Math.abs(idx-currentIndex)})});candidates.sort((a,b)=>a.distance-b.distance);const picked=[];for(const c of candidates){if(picked.length>=2)break;if(!picked.includes(c.step))picked.push(c.step)}const pool=shuffle(globalStepBank.filter(s=>s!==correct&&!picked.includes(s)));while(picked.length<3&&pool.length)picked.push(pool.pop());return shuffle([correct,...picked])}
+  function renderChoices(){const wrap=$('choices');wrap.innerHTML='';const correct=current.steps[currentIndex];buildOptions().forEach(text=>{const b=document.createElement('button');b.className='choice';b.innerHTML=formatText(text);b.addEventListener('click',()=>answer(b,text===correct));wrap.appendChild(b)})}
 
-  function renderQuestion(){
-    if(!current) return;
-    locked = false;
-    $('feedback').className = 'feedback';
-    $('feedback').textContent = '';
-    $('stepCounter').textContent = `${currentIndex+1} / ${current.steps.length}`;
-    $('progressText').textContent = `${currentIndex} / ${current.steps.length} adım tamam`;
-    $('mistakeText').textContent = `Toplam yanlış: ${currentMistakes}`;
-    $('progressBar').style.width = `${(currentIndex/current.steps.length)*100}%`;
-    $('questionText').textContent = `${currentIndex+1}. adım hangisi?`;
-    renderCompleted();
-    renderChoices();
-  }
+  function recordAnswer(isCorrect){state=normalizeToday(state);const p=state.progress[current.id];p.answered=(p.answered||0)+1;state.analytics.todayAnswered++;state.analytics.lifetimeAnswered++;if(isCorrect){p.correct=(p.correct||0)+1;state.analytics.todayCorrect++;state.analytics.lifetimeCorrect++}else{p.wrong=(p.wrong||0)+1;p.mistakes=(p.mistakes||0)+1;p.stepMistakes[currentIndex]=(p.stepMistakes[currentIndex]||0)+1;p.runMistakes=(p.runMistakes||0)+1;p.status='error';state.analytics.todayWrong++;state.analytics.lifetimeWrong++}}
+  function answer(btn,isCorrect){if(locked)return;locked=true;[...$('choices').querySelectorAll('button')].forEach(b=>b.disabled=true);recordAnswer(isCorrect);const p=state.progress[current.id];if(isCorrect){btn.classList.add('correct');$('feedback').textContent='Doğru. Sıradaki adıma geçiyorsun.';$('feedback').className='feedback good show';setTimeout(()=>{currentIndex++;p.currentStep=currentIndex;if(p.status==='idle')p.status='active';saveState();if(currentIndex>=current.steps.length)completeProcedure();else renderQuestion()},420)}else{btn.classList.add('wrong');p.currentStep=0;saveState();resetOverlay.classList.add('show');$('resetMessage').textContent=`${current.title}: ${currentIndex+1}. adım hata geçmişine eklendi. 1. adımdan yeniden başlıyor.`;setTimeout(()=>{currentIndex=0;resetOverlay.classList.remove('show');renderQuestion()},950)}}
 
-  function renderCompleted(){
-    const list = $('completedList');
-    list.innerHTML = '';
-    for(let i=0;i<currentIndex;i++){
-      const item = document.createElement('div');
-      item.className = 'doneItem';
-      item.innerHTML = `<span class="doneNum">${i+1}</span><span>${formatText(current.steps[i])}</span>`;
-      list.appendChild(item);
-    }
-  }
+  function completeProcedure(){const p=state.progress[current.id],runMistakes=p.runMistakes||0,perfect=runMistakes===0;p.completions=(p.completions||0)+1;p.lastRunMistakes=runMistakes;p.currentStep=0;p.status=perfect?'mastered':'error';if(perfect)p.perfectRuns=(p.perfectRuns||0)+1;p.runMistakes=0;state.analytics.todayCompleted++;state.analytics.lifetimeCompleted++;saveState();$('questionArea').style.display='none';const bar=$('progressBar');bar.classList.toggle('error',!perfect);bar.style.width='100%';$('progressText').textContent=`${current.steps.length} / ${current.steps.length} adım tamam`;$('stepCounter').textContent=`${current.steps.length} / ${current.steps.length}`;$('completionKicker').textContent=perfect?'Perfect Run':'Completed';$('completeTitle').textContent=perfect?'Perfect Run.':'Tur tamamlandı.';$('completeText').textContent=perfect?'Tüm bold item’ları tek hata yapmadan doğru sırayla tamamladın.':`Turu tamamladın; bu turda ${runMistakes} yanlış yaptın. Kart kırmızı kalacak. Perfect Run yaptığında yeşile dönecek.`;$('completeStats').innerHTML=`<span class="completeChip ${perfect?'good':'bad'}">${perfect?'0 yanlış':runMistakes+' yanlış'}</span><span class="completeChip">${current.steps.length}/${current.steps.length} adım</span><span class="completeChip">Perfect toplamı: ${p.perfectRuns||0}</span>`;const review=$('sequenceReview');review.innerHTML='';current.steps.forEach((step,i)=>{const row=document.createElement('div');row.className='reviewItem';row.innerHTML=`<span class="reviewNum">${i+1}.</span><span>${formatText(step)}</span>`;review.appendChild(row)});$('completePanel').classList.add('show');updateSummary()}
+  function repeatCurrent(){if(!current)return;const p=state.progress[current.id];currentIndex=0;p.currentStep=0;p.runMistakes=0;if(p.status!=='mastered')p.status='idle';saveState();$('completePanel').classList.remove('show');$('questionArea').style.display='';renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
 
-  function buildOptions(){
-    const correct = current.steps[currentIndex];
-    const candidates = [];
-    current.steps.forEach((step, idx) => {
-      if(step !== correct) candidates.push({step, distance:Math.abs(idx-currentIndex)});
-    });
-    candidates.sort((a,b)=>a.distance-b.distance);
-    const picked = [];
-    for(const c of candidates){
-      if(picked.length>=2) break;
-      if(!picked.includes(c.step)) picked.push(c.step);
-    }
-    const pool = shuffle(globalStepBank.filter(s => s !== correct && !picked.includes(s)));
-    while(picked.length < 3 && pool.length) picked.push(pool.pop());
-    return shuffle([correct, ...picked]);
-  }
+  function showView(name){homeView.classList.remove('active');trainerView.classList.remove('active');statsView.classList.remove('active');if(name==='home')homeView.classList.add('active');if(name==='trainer')trainerView.classList.add('active');if(name==='stats')statsView.classList.add('active')}
+  function goHome(){current=null;$('completePanel').classList.remove('show');$('questionArea').style.display='';renderHome();renderStats();showView('home');window.scrollTo({top:0,behavior:'auto'})}
+  function openStats(){renderStats();showView('stats');window.scrollTo({top:0,behavior:'auto'})}
+  function renderStats(){state=normalizeToday(state);const a=state.analytics;$('todayDateText').textContent=new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});$('todayAnswered').textContent=a.todayAnswered;$('todayCorrect').textContent=a.todayCorrect;$('todayWrong').textContent=a.todayWrong;$('todayCompleted').textContent=a.todayCompleted;$('lifeAnswered').textContent=a.lifetimeAnswered;$('lifeCorrect').textContent=a.lifetimeCorrect;$('lifeWrong').textContent=a.lifetimeWrong;$('lifeCompleted').textContent=a.lifetimeCompleted;const t=$('statsTable');t.innerHTML='<div class="historyRow head"><div>Emergency</div><div>Tur</div><div>Perfect</div><div>En çok hata</div><div>Doğru / Soru</div></div>';procedures.forEach(p=>{const s=state.progress[p.id],d=dominantError(p),row=document.createElement('div');row.className='historyRow';row.innerHTML=`<div class="procName">${escapeHtml(p.title)}</div><div>${s.completions||0}</div><div>${s.perfectRuns||0}</div><div class="${d?'historyError':''}">${d?`${d.step}. adım · ${d.count}×`:(totalWrong(s)>0?'Adım verisi yok':'—')}</div><div>${s.correct||0} / ${s.answered||0}</div>`;t.appendChild(row)})}
+  function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';applyTheme();saveState()}
+  function toggleExplain(){state.explainOpen=!state.explainOpen;updateExplainVisibility();saveState()}
+  function resetAll(){if(!confirm('Tüm ilerleme, Perfect Run ve hata geçmişi sıfırlansın mı?'))return;state=makeDefaultState();applyTheme();saveState();current=null;renderHome();renderStats();showView('home')}
 
-  function renderChoices(){
-    const wrap = $('choices');
-    wrap.innerHTML = '';
-    const correct = current.steps[currentIndex];
-    buildOptions().forEach(text => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'choice';
-      btn.innerHTML = formatText(text);
-      btn.addEventListener('click', () => answer(btn, text === correct));
-      wrap.appendChild(btn);
-    });
-  }
-
-  function recordAnswer(procId, isCorrect){
-    state = normalizeToday(state);
-    const p = state.progress[procId];
-    p.answered = (p.answered || 0) + 1;
-    if(isCorrect) p.correct = (p.correct || 0) + 1;
-    else p.wrong = (p.wrong || 0) + 1;
-
-    state.analytics.todayAnswered++;
-    state.analytics.lifetimeAnswered++;
-    if(isCorrect){
-      state.analytics.todayCorrect++;
-      state.analytics.lifetimeCorrect++;
-    } else {
-      state.analytics.todayWrong++;
-      state.analytics.lifetimeWrong++;
-    }
-  }
-
-  function answer(btn, isCorrect){
-    if(locked) return;
-    locked = true;
-    [...$('choices').querySelectorAll('button')].forEach(b => b.disabled = true);
-    recordAnswer(current.id, isCorrect);
-
-    if(isCorrect){
-      btn.classList.add('correct');
-      $('feedback').textContent = 'Doğru. Sıradaki adıma geçiyorsun.';
-      $('feedback').className = 'feedback good show';
-      setTimeout(() => {
-        currentIndex++;
-        state.progress[current.id].currentStep = currentIndex;
-        saveState();
-        if(currentIndex >= current.steps.length){
-          completeProcedure();
-        } else {
-          renderQuestion();
-        }
-      }, 420);
-    } else {
-      btn.classList.add('wrong');
-      currentMistakes++;
-      state.progress[current.id].mistakes = currentMistakes;
-      state.progress[current.id].currentStep = 0;
-      saveState();
-      resetOverlay.classList.add('show');
-      $('resetMessage').textContent = `${current.title}: 1. adımdan yeniden başlıyor.`;
-      setTimeout(() => {
-        currentIndex = 0;
-        resetOverlay.classList.remove('show');
-        renderQuestion();
-      }, 950);
-    }
-  }
-
-  function completeProcedure(){
-    state.progress[current.id].completions = (state.progress[current.id].completions || 0) + 1;
-    state.progress[current.id].currentStep = 0;
-    state.analytics.todayCompleted++;
-    state.analytics.lifetimeCompleted++;
-    saveState();
-    $('questionArea').style.display = 'none';
-    $('progressBar').style.width = '100%';
-    $('progressText').textContent = `${current.steps.length} / ${current.steps.length} adım tamam`;
-    $('stepCounter').textContent = `${current.steps.length} / ${current.steps.length}`;
-    $('completeText').textContent = `${current.title}: ${current.steps.length} adımı doğru sırayla tamamladın. Aşağıda tam sırayı tekrar görüp ister bir tur daha atabilirsin.`;
-    const review = $('sequenceReview');
-    review.innerHTML = '';
-    current.steps.forEach((step,i) => {
-      const row = document.createElement('div');
-      row.className = 'reviewItem';
-      row.innerHTML = `<span class="reviewNum">${i+1}.</span><span>${formatText(step)}</span>`;
-      review.appendChild(row);
-    });
-    $('completePanel').classList.add('show');
-    updateSummary();
-  }
-
-  function repeatCurrent(){
-    if(!current) return;
-    currentIndex = 0;
-    state.progress[current.id].currentStep = 0;
-    saveState();
-    $('completePanel').classList.remove('show');
-    $('questionArea').style.display = '';
-    renderQuestion();
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
-
-  function showView(name){
-    homeView.classList.remove('active');
-    trainerView.classList.remove('active');
-    statsView.classList.remove('active');
-    if(name === 'home') homeView.classList.add('active');
-    if(name === 'trainer') trainerView.classList.add('active');
-    if(name === 'stats') statsView.classList.add('active');
-  }
-
-  function goHome(){
-    current = null;
-    $('completePanel').classList.remove('show');
-    $('questionArea').style.display = '';
-    renderHome();
-    renderStats();
-    showView('home');
-    window.scrollTo({top:0, behavior:'auto'});
-  }
-
-  function openStats(){
-    renderStats();
-    showView('stats');
-    window.scrollTo({top:0, behavior:'auto'});
-  }
-
-  function renderStats(){
-    $('todayDateText').textContent = new Date().toLocaleDateString('tr-TR', { day:'2-digit', month:'long', year:'numeric' });
-    $('todayAnswered').textContent = state.analytics.todayAnswered;
-    $('todayCorrect').textContent = state.analytics.todayCorrect;
-    $('todayWrong').textContent = state.analytics.todayWrong;
-    $('todayCompleted').textContent = state.analytics.todayCompleted;
-    $('lifeAnswered').textContent = state.analytics.lifetimeAnswered;
-    $('lifeCorrect').textContent = state.analytics.lifetimeCorrect;
-    $('lifeWrong').textContent = state.analytics.lifetimeWrong;
-    $('lifeCompleted').textContent = state.analytics.lifetimeCompleted;
-
-    const table = $('statsTable');
-    table.innerHTML = `
-      <div class="tableRow head">
-        <div>Emergency</div>
-        <div>Tur</div>
-        <div>Yanlış</div>
-        <div>Çözülen</div>
-        <div>Doğru</div>
-      </div>`;
-
-    procedures.forEach(p => {
-      const s = state.progress[p.id];
-      const row = document.createElement('div');
-      row.className = 'tableRow';
-      row.innerHTML = `
-        <div class="procName">${escapeHtml(p.title)}</div>
-        <div>${s.completions || 0}</div>
-        <div>${s.mistakes || 0}</div>
-        <div>${s.answered || 0}</div>
-        <div>${s.correct || 0}</div>`;
-      table.appendChild(row);
-    });
-  }
-
-  function toggleTheme(){
-    state.theme = state.theme === 'dark' ? 'light' : 'dark';
-    applyTheme();
-    saveState();
-  }
-
-  function toggleExplain(){
-    state.explainOpen = !state.explainOpen;
-    updateExplainVisibility();
-    saveState();
-  }
-
-  function resetAll(){
-    if(!confirm('Tüm emergency ilerlemesi ve istatistikler sıfırlansın mı?')) return;
-    state = makeDefaultState();
-    applyTheme();
-    saveState();
-    renderHome();
-    renderStats();
-    if(current){
-      currentIndex = 0;
-      currentMistakes = 0;
-      current = null;
-    }
-    showView('home');
-  }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
-  }
-  function formatText(s){
-    return escapeHtml(s).replace(/\n/g,'<br>');
-  }
-
-  $('backBtn').addEventListener('click', goHome);
-  $('menuBtn').addEventListener('click', goHome);
-  $('repeatBtn').addEventListener('click', repeatCurrent);
-  $('resetAllBtn').addEventListener('click', resetAll);
-  $('statsBtn').addEventListener('click', openStats);
-  $('statsBackBtn').addEventListener('click', goHome);
-  $('themeBtn').addEventListener('click', toggleTheme);
-  $('toggleExplainBtn').addEventListener('click', toggleExplain);
-
-  document.addEventListener('keydown', e => {
-    if(e.key.toLowerCase() === 'd') toggleTheme();
-    if(e.key === 'Escape') goHome();
-    if(!current || locked || !trainerView.classList.contains('active')) return;
-    const n = Number(e.key);
-    if(n>=1 && n<=4){
-      const buttons = [...$('choices').querySelectorAll('button')];
-      if(buttons[n-1]) buttons[n-1].click();
-    }
-  });
-
-  applyTheme();
-  updateExplainVisibility();
-  renderHome();
-  renderStats();
+  $('backBtn').addEventListener('click',goHome);$('menuBtn').addEventListener('click',goHome);$('repeatBtn').addEventListener('click',repeatCurrent);$('resetAllBtn').addEventListener('click',resetAll);$('statsBtn').addEventListener('click',openStats);$('statsBackBtn').addEventListener('click',goHome);$('themeBtn').addEventListener('click',toggleTheme);$('toggleExplainBtn').addEventListener('click',toggleExplain);$('closeReviewBtn').addEventListener('click',closeQuickReview);reviewOverlay.addEventListener('click',e=>{if(e.target===reviewOverlay)closeQuickReview()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(reviewOverlay.classList.contains('show'))closeQuickReview();else goHome();return}if(!current||locked||!trainerView.classList.contains('active'))return;const n=Number(e.key);if(n>=1&&n<=4){const bs=[...$('choices').querySelectorAll('button')];if(bs[n-1])bs[n-1].click()}});
+  applyTheme();updateExplainVisibility();renderHome();renderStats();
 })();
 </script>
-
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
-  });
-}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').then(reg=>reg.update()).catch(()=>{})})}
 </script>
 </body>
 </html>
