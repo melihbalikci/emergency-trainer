@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <title>Emergency Trainer</title>
+  <style>
+    :root{
+      --bg:#f5f5f7;
+      --panel:#ffffff;
+      --panel-soft:#fbfbfd;
+      --text:#1d1d1f;
+      --muted:#86868b;
+      --line:#e5e5ea;
+      --line-strong:#d2d2d7;
+      --accent:#f2c94c;
+      --accent-soft:#fff8df;
+      --accent-ink:#6e5710;
+      --ok:#24845b;
+      --ok-soft:#f0faf5;
+      --bad:#c43b32;
+      --bad-soft:#fff3f2;
+      --shadow:0 10px 32px rgba(0,0,0,.055);
+      --shadow-soft:0 1px 3px rgba(0,0,0,.035);
+    }
+    html[data-theme="dark"]{
+      --bg:#000000;
+      --panel:#1c1c1e;
+      --panel-soft:#242426;
+      --text:#f5f5f7;
+      --muted:#98989d;
+      --line:#38383a;
+      --line-strong:#48484a;
+      --accent:#f2c94c;
+      --accent-soft:#302a17;
+      --accent-ink:#f5d767;
+      --ok:#66c79a;
+      --ok-soft:#173126;
+      --bad:#ff8178;
+      --bad-soft:#351e1d;
+      --shadow:0 12px 34px rgba(0,0,0,.32);
+      --shadow-soft:0 1px 4px rgba(0,0,0,.22);
+    }
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%;background:var(--bg);color-scheme:light}
+    html[data-theme="dark"]{color-scheme:dark}
+    body{
+      margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,"Helvetica Neue",Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    button,input,select,textarea{font:inherit;-webkit-tap-highlight-color:transparent}
+    button{color:inherit}
+    .app{max-width:1120px;margin:0 auto;padding:20px 18px 48px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+    .brand{display:flex;align-items:center;gap:11px;min-width:0}
+    .brandmark{
+      width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:none;
+      background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow-soft);
+      color:var(--text);font-size:13px;font-weight:750;letter-spacing:-.02em;position:relative;overflow:hidden
+    }
+    .brandmark:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--accent)}
+    .brandtext{min-width:0}
+    .brandtext strong{display:block;font-size:16px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brandtext span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .iconbtn,.primary,.secondary,.ghost,.smallbtn,.backbtn{
+      border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);
+      min-height:42px;padding:0 13px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-soft)
+    }
+    .iconbtn:hover,.secondary:hover,.ghost:hover,.smallbtn:hover,.backbtn:hover{background:var(--panel-soft)}
+    .primary{background:var(--text);color:var(--panel);border-color:var(--text);box-shadow:none}
+    html[data-theme="dark"] .primary{background:#f5f5f7;color:#1d1d1f;border-color:#f5f5f7}
+
+    .home,.trainer,.statsView{display:none}
+    .home.active,.trainer.active,.statsView.active{display:block}
+
+    .hero{
+      background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:34px 32px 28px;
+      box-shadow:var(--shadow);margin-bottom:22px;position:relative;overflow:hidden
+    }
+    .hero:before{content:"";position:absolute;top:0;left:32px;width:52px;height:5px;border-radius:0 0 6px 6px;background:var(--accent)}
+    .eyebrow{display:none}
+    h1{font-size:clamp(36px,7vw,64px);line-height:.98;letter-spacing:-.055em;margin:4px 0 12px;max-width:820px;font-weight:760}
+    .hero p{margin:0;color:var(--muted);font-size:15px;line-height:1.55;max-width:720px}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:26px}
+    .stat{background:var(--panel-soft);border:1px solid var(--line);border-radius:16px;padding:14px 15px}
+    .stat b{display:block;font-size:22px;font-weight:700;letter-spacing:-.03em}
+    .stat span{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.35}
+
+    .sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:24px 2px 12px}
+    .sectionhead h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.025em}
+    .sectionhead p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .card{
+      position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:22px;
+      padding:20px;min-height:146px;cursor:pointer;box-shadow:var(--shadow-soft);
+      transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;touch-action:manipulation
+    }
+    .card:hover{transform:translateY(-1px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+    .card:active{transform:scale(.993)}
+    .cardtop{display:flex;justify-content:flex-end;gap:8px;align-items:flex-start;min-height:28px}
+    .tag{font-size:11px;font-weight:650;color:var(--muted);background:var(--panel-soft);padding:6px 8px;border-radius:999px;white-space:nowrap;border:1px solid var(--line)}
+    .tag.mastered{color:var(--ok);background:var(--ok-soft);border-color:transparent}
+    .card h3{font-size:17px;line-height:1.28;margin:10px 0 20px;letter-spacing:-.018em;font-weight:690;max-width:90%}
+    .card p{display:none}
+    .cardbottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto}
+    .steps{font-size:12px;color:var(--muted);font-weight:600}
+    .miniProgress{height:5px;flex:1;max-width:132px;background:#ececf0;border-radius:999px;overflow:hidden}
+    html[data-theme="dark"] .miniProgress{background:#343438}
+    .miniProgress span{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .25s ease}
+    .helperNote{margin:18px 3px 0;color:var(--muted);font-size:11px;line-height:1.55}
+
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+    .trainerHeader,.statsHeader{padding:18px 20px 0}
+    .navrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .counter{font-size:12px;font-weight:650;color:var(--muted);background:var(--panel-soft);border:1px solid var(--line);padding:8px 10px;border-radius:999px}
+    .titleblock{padding:24px 2px 18px}
+    .titleblock .category{display:none}
+    .titleblock h2{margin:0 0 9px;font-size:clamp(29px,6vw,46px);line-height:1.02;letter-spacing:-.045em;font-weight:750;max-width:800px}
+    .titleblock p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;max-width:760px}
+
+    .explainBox{margin:0 20px 18px;padding:17px 18px;border-radius:18px;border:1px solid var(--line);background:var(--panel-soft)}
+    .explainBox b{display:block;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:.055em}
+    .explainBox p{margin:0;color:var(--text);font-size:14px;line-height:1.68}
+    .explainBox .term,.guideContent .term{font-weight:750;color:var(--text)}
+
+    .progressWrap{padding:0 20px 20px}
+    .progressMeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--muted);font-weight:600;gap:8px;flex-wrap:wrap}
+    .progressTrack{height:7px;background:#ececf0;border-radius:999px;overflow:hidden}
+    html[data-theme="dark"] .progressTrack{background:#343438}
+    .progressBar{height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .25s ease}
+    .questionArea{border-top:1px solid var(--line);padding:24px 20px 24px;background:var(--panel)}
+    .completedList{display:grid;gap:8px;margin-bottom:18px}
+    .doneItem{display:flex;align-items:flex-start;gap:10px;background:var(--ok-soft);border:1px solid transparent;border-radius:14px;padding:10px 12px;font-size:12px;color:var(--text);line-height:1.45}
+    .doneNum{display:grid;place-items:center;width:22px;height:22px;flex:none;border-radius:999px;background:var(--panel);font-weight:700;color:var(--ok);border:1px solid var(--line)}
+    .prompt{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.065em;margin-bottom:8px}
+    .question{font-size:clamp(21px,4vw,29px);font-weight:720;letter-spacing:-.03em;margin-bottom:17px}
+    .choices{display:grid;gap:10px}
+    .choice{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel-soft);border-radius:15px;padding:16px;min-height:58px;color:var(--text);font-weight:600;line-height:1.4;cursor:pointer;box-shadow:none;transition:transform .12s ease,border-color .12s ease,background .12s ease;touch-action:manipulation}
+    .choice:hover{border-color:var(--line-strong);background:var(--panel)}
+    .choice:active{transform:scale(.995)}
+    .choice.correct{border-color:#9bd1b8;background:var(--ok-soft);color:var(--text)}
+    .choice.wrong{border-color:#efb0aa;background:var(--bad-soft);color:var(--text)}
+    .choice:disabled{cursor:default}
+    .feedback{display:none;margin-top:12px;border-radius:13px;padding:12px 14px;font-size:13px;font-weight:600;line-height:1.45}
+    .feedback.show{display:block}
+    .feedback.good{background:var(--ok-soft);color:var(--ok);border:1px solid transparent}
+    .feedback.bad{background:var(--bad-soft);color:var(--bad);border:1px solid transparent}
+
+    .complete{display:none;text-align:center;padding:30px 20px;border-top:1px solid var(--line)}
+    .complete.show{display:block}
+    .completeIcon{width:62px;height:62px;border-radius:18px;background:var(--panel-soft);display:grid;place-items:center;margin:0 auto 14px;font-size:27px;color:var(--ok);border:1px solid var(--line)}
+    .complete h3{font-size:27px;margin:0 0 7px;letter-spacing:-.035em;font-weight:720}
+    .complete p{color:var(--muted);margin:0 auto 18px;max-width:560px;line-height:1.55;font-size:14px}
+    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .primary,.secondary,.ghost{min-height:46px;padding:0 16px}
+    .secondary{background:var(--panel-soft)}
+    .sequenceReview{margin:18px auto 0;max-width:740px;text-align:left;display:grid;gap:8px}
+    .reviewItem{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:var(--panel-soft);font-size:12px;line-height:1.45}
+    .reviewNum{font-weight:700;color:var(--muted);min-width:22px}
+
+    .guide{margin-top:22px}
+    .guideGrid{display:grid;gap:10px}
+    .guide details{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px 17px;box-shadow:var(--shadow-soft)}
+    .guide summary{cursor:pointer;list-style:none;font-weight:650;display:flex;align-items:center;justify-content:space-between;gap:12px;letter-spacing:-.01em}
+    .guide summary::-webkit-details-marker{display:none}
+    .guide summary span{color:var(--muted);font-size:12px;font-weight:600}
+    .guideContent{padding-top:11px;color:var(--text);font-size:14px;line-height:1.7}
+    .guideContent:before{content:"Ezber mantığı";display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;margin-bottom:7px}
+
+    .statsBody{padding:18px 20px 26px}
+    .statsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .statsCard{background:var(--panel-soft);border:1px solid var(--line);border-radius:16px;padding:15px}
+    .statsCard b{display:block;font-size:24px;font-weight:700;letter-spacing:-.035em}
+    .statsCard span{display:block;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.4}
+    .statsSubsection{margin-top:20px}
+    .statsSubsection h3{margin:0 0 10px;font-size:17px;font-weight:700;letter-spacing:-.02em}
+    .tableList{display:grid;gap:8px}
+    .tableRow{display:grid;grid-template-columns:minmax(0,1.8fr) repeat(4,minmax(0,.7fr));gap:8px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+    .tableRow.head{background:var(--panel-soft);font-size:11px;font-weight:700;color:var(--muted)}
+    .tableRow div{font-size:13px;line-height:1.4}
+    .tableRow .procName{font-weight:600}
+    .muted{color:var(--muted)}
+
+    .resetOverlay{position:fixed;inset:0;display:none;place-items:center;background:rgba(245,245,247,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:30;padding:20px}
+    html[data-theme="dark"] .resetOverlay{background:rgba(0,0,0,.62)}
+    .resetOverlay.show{display:grid}
+    .resetToast{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;padding:18px 20px;text-align:center;max-width:370px}
+    .resetToast b{display:block;color:var(--bad);font-size:17px;margin-bottom:5px}
+    .resetToast span{color:var(--muted);font-size:13px;line-height:1.5}
+
+    @media (max-width:900px){
+      .summary,.statsGrid{grid-template-columns:repeat(2,1fr)}
+      .grid{grid-template-columns:1fr}
+      .tableRow{grid-template-columns:minmax(0,1.6fr) repeat(2,minmax(0,.8fr))}
+      .tableRow div:nth-child(4),.tableRow div:nth-child(5){display:none}
+    }
+    @media (max-width:720px){
+      .app{padding:13px 11px 34px}
+      .topbar{align-items:flex-start;flex-direction:column;margin-bottom:14px}
+      .toolbar{width:100%;justify-content:flex-start}
+      .brandtext span{display:none}
+      .hero{padding:28px 20px 22px;border-radius:22px}
+      .hero:before{left:20px}
+      h1{font-size:clamp(38px,13vw,54px)}
+      .trainerHeader,.statsHeader,.questionArea,.progressWrap,.statsBody{padding-left:14px;padding-right:14px}
+      .explainBox{margin-left:14px;margin-right:14px}
+      .panel{border-radius:22px}
+      .choice{font-size:15px;padding:15px 14px}
+      .card{min-height:132px;padding:17px}
+    }
+    @media (max-width:420px){
+      .summary,.statsGrid{grid-template-columns:1fr 1fr}
+      .stat b,.statsCard b{font-size:20px}
+      .iconbtn,.smallbtn{padding:0 11px}
+      .brandmark{width:40px;height:40px}
+    }
+    @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Emergency Trainer" />
+  <meta name="application-name" content="Emergency Trainer" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brandmark">BF</div>
+      <div class="brandtext">
+        <strong>Emergency Trainer</strong>
+        <span>Bold Face Memory Trainer</span>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="iconbtn" id="statsBtn" type="button">İstatistikler</button>
+      <button class="iconbtn" id="themeBtn" type="button">🌙 Gece modu</button>
+      <button class="iconbtn" id="resetAllBtn" type="button">İlerlemeyi sıfırla</button>
+    </div>
+  </div>
+
+  <main class="home active" id="homeView">
+    <section class="hero">
+      <h1>Emergency Trainer</h1>
+      <p>Bold face adımlarını doğru sırayla öğren. Yanlış cevapta aynı emergency’nin başına dön.</p>
+      <div class="summary">
+        <div class="stat"><b id="totalProcedures">0</b><span>Emergency</span></div>
+        <div class="stat"><b id="masteredCount">0</b><span>En az 1 kez tamamlanan</span></div>
+        <div class="stat"><b id="totalCompletions">0</b><span>Toplam tamamlanan tur</span></div>
+        <div class="stat"><b id="todayAnsweredMini">0</b><span>Bugün çözülen soru</span></div>
+      </div>
+    </section>
+
+    <div class="sectionhead">
+      <div>
+        <h2>Choose an emergency</h2>
+        <p>Bir prosedür seç ve sırayı çalış.</p>
+      </div>
+    </div>
+    <section class="grid" id="cards"></section>
+
+    <section class="guide">
+      <div class="sectionhead">
+        <div>
+          <h2>Emergency logic</h2>
+          <p>Her adımın neden o sırada yapıldığını anlaşılır biçimde öğren.</p>
+        </div>
+      </div>
+      <div class="guideGrid" id="guideGrid"></div>
+    </section>
+
+    <p class="helperNote">Not: Açıklamalar ezberi kolaylaştıran mantık anlatımıdır; checklist metni değildir. Uçuşta geçerli checklist, POH/AFM ve okul prosedürleri esastır.</p>
+  </main>
+
+  <main class="trainer" id="trainerView">
+    <section class="panel">
+      <div class="trainerHeader">
+        <div class="navrow">
+          <button class="backbtn" id="backBtn" type="button">← Ana sayfa</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button class="smallbtn" id="toggleExplainBtn" type="button">Açıklama</button>
+            <span class="counter" id="stepCounter">1 / 5</span>
+          </div>
+        </div>
+        <div class="titleblock">
+          <div class="category" id="categoryLabel">FIRE</div>
+          <h2 id="trainerTitle">CABIN FIRE</h2>
+          <p id="trainerSubtitle">Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.</p>
+        </div>
+      </div>
+      <div class="explainBox" id="explainBox">
+        <b>Mantık / neden böyle?</b>
+        <p id="explainText"></p>
+      </div>
+      <div class="progressWrap">
+        <div class="progressMeta"><span id="progressText">0 / 5 adım tamam</span><span id="mistakeText">Hata: 0</span></div>
+        <div class="progressTrack"><div class="progressBar" id="progressBar"></div></div>
+      </div>
+      <div class="questionArea" id="questionArea">
+        <div class="completedList" id="completedList"></div>
+        <div class="prompt">SIRADAKİ HAFIZA ADIMI</div>
+        <div class="question" id="questionText">1. adım hangisi?</div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+      <div class="complete" id="completePanel">
+        <div class="completeIcon">✓</div>
+        <h3>Tur tamamlandı.</h3>
+        <p id="completeText">Bu emergency’nin tüm adımlarını doğru sırayla tamamladın.</p>
+        <div class="actions">
+          <button class="primary" id="repeatBtn" type="button">Bir tur daha</button>
+          <button class="secondary" id="menuBtn" type="button">Emergency seç</button>
+        </div>
+        <div class="sequenceReview" id="sequenceReview"></div>
+      </div>
+    </section>
+  </main>
+
+  <main class="statsView" id="statsView">
+    <section class="panel">
+      <div class="statsHeader">
+        <div class="navrow">
+          <button class="backbtn" id="statsBackBtn" type="button">← Ana sayfa</button>
+          <span class="counter" id="todayDateText">Bugün</span>
+        </div>
+        <div class="titleblock">
+          <div class="category">ÇALIŞMA İSTATİSTİKLERİ</div>
+          <h2>Bugün ne kadar çalıştın?</h2>
+          <p>Bugün çözdüğün soru sayısı, doğru-yanlış dağılımı ve tüm zamanlar toplamların burada görünür.</p>
+        </div>
+      </div>
+      <div class="statsBody">
+        <div class="statsSubsection">
+          <h3>Bugün</h3>
+          <div class="statsGrid">
+            <div class="statsCard"><b id="todayAnswered">0</b><span>Çözülen soru</span></div>
+            <div class="statsCard"><b id="todayCorrect">0</b><span>Doğru</span></div>
+            <div class="statsCard"><b id="todayWrong">0</b><span>Yanlış</span></div>
+            <div class="statsCard"><b id="todayCompleted">0</b><span>Tamamlanan tur</span></div>
+          </div>
+        </div>
+        <div class="statsSubsection">
+          <h3>Tüm zamanlar</h3>
+          <div class="statsGrid">
+            <div class="statsCard"><b id="lifeAnswered">0</b><span>Toplam çözülen soru</span></div>
+            <div class="statsCard"><b id="lifeCorrect">0</b><span>Toplam doğru</span></div>
+            <div class="statsCard"><b id="lifeWrong">0</b><span>Toplam yanlış</span></div>
+            <div class="statsCard"><b id="lifeCompleted">0</b><span>Toplam tamamlanan tur</span></div>
+          </div>
+        </div>
+        <div class="statsSubsection">
+          <h3>Emergency bazında</h3>
+          <div class="tableList" id="statsTable"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="resetOverlay" id="resetOverlay" aria-live="assertive">
+  <div class="resetToast">
+    <b>Yanlış — başa sardı.</b>
+    <span id="resetMessage">Bu emergency tekrar 1. adımdan başlayacak.</span>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const procedures = [
+    {
+      id:'takeoff-roll', category:'ENGINE FAILURE', title:'ENGINE FAILURE DURING TAKEOFF ROLL',
+      note:'Kalkış koşusunda güç kaybı: durdurma öncelikli.',
+      explanation:`Uçak hâlâ pist üzerindeyken öncelik uçuşu sürdürmek değil, kontrollü şekilde durmaktır. İlk olarak <strong class="term">Throttle Control - IDLE (pull full out)</strong> ile motor itkisinin devam etmesini engellersin. Hemen ardından <strong class="term">Brakes - APPLY</strong> gelir; kalan pist mesafesini kullanarak uçağı durdurursun. Aklında sıralama basit olsun: önce gücü kes, sonra durdur.`,
+      steps:[
+        'Throttle Control - IDLE (pull full out)',
+        'Brakes - APPLY'
+      ]
+    },
+    {
+      id:'after-takeoff', category:'ENGINE FAILURE', title:'ENGINE FAILURE IMMEDIATELY AFTER TAKEOFF',
+      note:'Kalkış sonrası ilk iş: hız / glide kontrolü.',
+      explanation:`Motor kalkıştan hemen sonra durduğunda ilk hedef checklist aramak değil, uçağın uçuş enerjisini korumaktır. Bu nedenle bold item doğrudan <strong class="term">Airspeed - 70 KIAS - Flaps UP / 65 KIAS - Flaps 10° - FULL</strong> ile başlar. Yani flap konfigürasyonuna göre doğru sürati tut; önce uçağı uçur ve stall'dan uzak kal. Bu emergency için ezberin ana fikri: önce airspeed.`,
+      steps:[
+        'Airspeed - 70 KIAS - Flaps UP\n65 KIAS - Flaps 10° - FULL'
+      ]
+    },
+    {
+      id:'restart-flight', category:'ENGINE FAILURE', title:'ENGINE FAILURE DURING FLIGHT (Restart Procedures)',
+      note:'Uçuşta motor durursa: önce glide, sonra yakıt/karışım kontrolü.',
+      explanation:`Uçuşta motor durduğunda önce zaman ve mesafe kazanman gerekir; bu yüzden <strong class="term">Airspeed - 68 KIAS (best glide speed)</strong> ilk adımdır. Uçak stabilize olduktan sonra yakıtın motora ulaşabileceği yolu sırayla yeniden kurarsın: <strong class="term">FUEL SHUTOFF Valve - ON (push full in)</strong>, ardından <strong class="term">FUEL SELECTOR Valve - BOTH</strong> ve <strong class="term">FUEL PUMP Switch - ON</strong>. Restart hâlâ olmadıysa <strong class="term">Mixture Control - RICH (if restart has not occurred)</strong> ile karışımı zengin konuma getirirsin. Mantık: önce glide, sonra fuel path, sonra mixture.`,
+      steps:[
+        'Airspeed - 68 KIAS (best glide speed)',
+        'FUEL SHUTOFF Valve - ON (push full in)',
+        'FUEL SELECTOR Valve - BOTH',
+        'FUEL PUMP Switch - ON',
+        'Mixture Control - RICH (if restart has not occurred)'
+      ]
+    },
+    {
+      id:'start-fire-fails', category:'FIRES', title:'FIRE DURING START ON GROUND',
+      note:'Yerde start sırasında yangın: motoru çalıştırıp alevi içeri çekme mantığı, sonra yakıtı kesme.',
+      explanation:`Start sırasında yangında ilk amaç motoru çevirmeye devam ederek alevi motorun içine çekebilme ihtimalini kullanmaktır; bu yüzden <strong class="term">MAGNETOS Switch - START (continue cranking to start the engine)</strong> ilk adımdır. Motor çalışmazsa <strong class="term">Throttle Control - FULL (push full in)</strong> ve <strong class="term">Mixture Control - IDLE CUTOFF (pull full out)</strong> ile birlikte cranking sürdürülür: <strong class="term">MAGNETOS Switch - START (continue cranking)</strong>. Ardından yangını besleyebilecek yakıtı tamamen kesmek için <strong class="term">FUEL SHUTOFF Valve - OFF (pull full out)</strong> ve <strong class="term">FUEL PUMP Switch - OFF</strong>; ateşleme ve elektrik kaynaklarını kaldırmak için <strong class="term">MAGNETOS Switch - OFF</strong>, <strong class="term">STBY BATT Switch - OFF</strong> ve <strong class="term">MASTER Switch (ALT and BAT) - OFF</strong> gelir.`,
+      steps:[
+        'MAGNETOS Switch - START (continue cranking to start the engine)',
+        'Throttle Control - FULL (push full in)',
+        'Mixture Control - IDLE CUTOFF (pull full out)',
+        'MAGNETOS Switch - START (continue cranking)',
+        'FUEL SHUTOFF Valve - OFF (pull full out)',
+        'FUEL PUMP Switch - OFF',
+        'MAGNETOS Switch - OFF',
+        'STBY BATT Switch - OFF',
+        'MASTER Switch (ALT and BAT) - OFF'
+      ]
+    },
+    {
+      id:'engine-fire', category:'FIRES', title:'ENGINE FIRE IN FLIGHT',
+      note:'Motor yangınında: yakıtı ve elektriği kes.',
+      explanation:`Engine fire'da amaç yangının yakıt ve elektrikle beslenmesini mümkün olduğunca hızlı kesmektir. Önce <strong class="term">Mixture Control - IDLE CUTOFF (pull full out)</strong> ile motora gönderilen yakıtı kesersin. Sonra <strong class="term">FUEL SHUTOFF Valve - OFF (pull full out)</strong> ve <strong class="term">FUEL PUMP Switch - OFF</strong> ile yakıt hattını ve pompayı devreden çıkarırsın. Son adım <strong class="term">MASTER Switch (ALT and BAT) - OFF</strong>; böylece ana elektrik kaynağı da kapatılır. Ezber mantığı: mixture → fuel valve → fuel pump → master.`,
+      steps:[
+        'Mixture Control - IDLE CUTOFF (pull full out)',
+        'FUEL SHUTOFF Valve - OFF (pull full out)',
+        'FUEL PUMP Switch - OFF',
+        'MASTER Switch (ALT and BAT) - OFF'
+      ]
+    },
+    {
+      id:'electrical-fire', category:'FIRES', title:'ELECTRICAL FIRE IN FLIGHT',
+      note:'Elektrik yangınında: gücü kes, hava akımını sınırlayıp yangını söndür.',
+      explanation:`Electrical fire'da ilk hedef elektrik enerjisini ortadan kaldırmaktır. Önce bağımsız bir kaynak olarak sistemi beslemeye devam edebilen <strong class="term">STBY BATT Switch - OFF</strong> yapılır; sonra <strong class="term">MASTER Switch (ALT and BAT) - OFF</strong> ile ana elektrik kesilir. Elektrik kesildikten sonra yangını veya dumanı kabin içinde taşıyabilecek hava akımını azaltmak için <strong class="term">Cabin Vents - CLOSED (to avoid drafts)</strong> ve <strong class="term">CABIN HT and CABIN AIR Control Knobs - OFF (push full in) (to avoid drafts)</strong> gelir. Son olarak mevcutsa <strong class="term">Fire Extinguisher - ACTIVATE (if available)</strong> kullanılır. Sıra: elektrik → hava akımı → extinguisher.`,
+      steps:[
+        'STBY BATT Switch - OFF',
+        'MASTER Switch (ALT and BAT) - OFF',
+        'Cabin Vents - CLOSED (to avoid drafts)',
+        'CABIN HT and CABIN AIR Control Knobs - OFF (push full in) (to avoid drafts)',
+        'Fire Extinguisher - ACTIVATE (if available)'
+      ]
+    },
+    {
+      id:'cabin-fire', category:'FIRES', title:'CABIN FIRE',
+      note:'Kabin içi yangında elektrik + hava akımı kontrolü çok kritik.',
+      explanation:`Cabin fire'da yangının kaynağı kesin olarak bilinmeyebileceği için önce elektrik ihtimalini ortadan kaldırırsın. Bu nedenle <strong class="term">STBY BATT Switch - OFF</strong> ve hemen ardından <strong class="term">MASTER Switch (ALT and BAT) - OFF</strong> gelir. Sonra kabin içinde alevi ve dumanı hareket ettirebilecek draft'ı azaltmak için <strong class="term">Cabin Vents - CLOSED (to avoid drafts)</strong> ile <strong class="term">CABIN HT and CABIN AIR Control Knobs - OFF (push full in) (to avoid drafts)</strong> yapılır. Kaynaklar ve hava akımı kontrol altına alındıktan sonra <strong class="term">Fire Extinguisher - ACTIVATE (if available)</strong> uygulanır. Aklında: power off → airflow off → extinguish.`,
+      steps:[
+        'STBY BATT Switch - OFF',
+        'MASTER Switch (ALT and BAT) - OFF',
+        'Cabin Vents - CLOSED (to avoid drafts)',
+        'CABIN HT and CABIN AIR Control Knobs - OFF (push full in) (to avoid drafts)',
+        'Fire Extinguisher - ACTIVATE (if available)'
+      ]
+    },
+    {
+      id:'wing-fire', category:'FIRES', title:'WING FIRE',
+      note:'Kanat bölgesindeki elektrikli kaynakları sırayla kapat.',
+      explanation:`Wing fire'da listedeki dört bold item'ın ortak noktası kanat üzerindeki veya kanatla ilişkili elektrikli ekipmanları kapatmaktır. Sırasıyla <strong class="term">LAND and TAXI Light Switches - OFF</strong>, <strong class="term">NAV Light Switch - OFF</strong> ve <strong class="term">STROBE Light Switch - OFF</strong> ile ışık devrelerini kapatırsın. Ardından <strong class="term">PITOT HEAT Switch - OFF</strong> ile kanattaki ısıtıcı devreyi de kapatırsın. Ezber mantığı: wing üzerindeki elektrikli tüketicileri sırayla OFF yap.`,
+      steps:[
+        'LAND and TAXI Light Switches - OFF',
+        'NAV Light Switch - OFF',
+        'STROBE Light Switch - OFF',
+        'PITOT HEAT Switch - OFF'
+      ]
+    },
+    {
+      id:'icing', category:'ICING', title:'INADVERTENT ICING ENCOUNTER DURING FLIGHT',
+      note:'Önce pitot’u koru, sonra buzlanmadan çık, sonra görüşü koru.',
+      explanation:`İstenmeyen buzlanmaya girdiğinde önce uçuş verisini korumak istersin; bu nedenle <strong class="term">PITOT HEAT Switch - ON</strong> ilk adımdır. Sonra buzlanmanın devam ettiği ortamdan çıkmak gerekir: <strong class="term">Turn back or change altitude (to obtain an outside air temperature that is less conducive to icing)</strong>. Ardından görüşü korumaya odaklanırsın: <strong class="term">CABIN HT Control Knob - ON (pull full out)</strong>, <strong class="term">Defroster Control Outlets - OPEN (to obtain maximum windshield defroster airflow)</strong> ve <strong class="term">CABIN AIR Control Knob - ADJUST (to obtain maximum defroster heat and airflow)</strong>. Mantık: pitot'u koru → icing'den çık → windshield'i temiz tut.`,
+      steps:[
+        'PITOT HEAT Switch - ON',
+        'Turn back or change altitude (to obtain an outside air temperature that is less conducive to icing)',
+        'CABIN HT Control Knob - ON (pull full out)',
+        'Defroster Control Outlets - OPEN (to obtain maximum windshield defroster airflow)',
+        'CABIN AIR Control Knob - ADJUST (to obtain maximum defroster heat and airflow)'
+      ]
+    },
+    {
+      id:'static-source', category:'INSTRUMENT', title:'STATIC SOURCE BLOCKAGE (ERRONEOUS INSTRUMENT READING SUSPECTED)',
+      note:'Alternatif static source ile hatalı göstergeyi düzeltme mantığı.',
+      explanation:`Static source blockage şüphesinde problem, pitot-static göstergelerin doğru static basıncı alamaması olabilir. Bu nedenle doğrudan <strong class="term">ALT STATIC AIR Valve - ON (pull full out)</strong> yaparak alternatif static kaynağı devreye alırsın. Bu emergency tek adımlı; akılda tutulacak eşleştirme basit: erroneous instrument reading + static şüphesi = ALT STATIC AIR ON.`,
+      steps:[
+        'ALT STATIC AIR Valve - ON (pull full out)'
+      ]
+    },
+    {
+      id:'ap-ptrm', category:'AUTOPILOT / TRIM', title:'AP OR PTRM ANNUNCIATOR(S) COME ON',
+      note:'Runaway trim / AP arızasında önce uçağı tut, sonra trim disconnect.',
+      explanation:`AP veya PTRM annunciator geldiğinde ilk iş sistemi kurcalamak değil, uçağın fiziksel kontrolünü sağlamaktır; bu yüzden <strong class="term">Control Wheel - GRASP FIRMLY (regain control of airplane)</strong> ile başlarsın. Sonra arızalı trim/autopilot komutunu bastırmak için <strong class="term">A/P TRIM DISC Button - PRESS and HOLD (throughout recovery)</strong> yapılır. Uçağın kuvvetlerini yönetmek için <strong class="term">Elevator Trim Control - ADJUST MANUALLY (as necessary)</strong> kullanılır. Son olarak sistemi elektriksel olarak izole etmek için <strong class="term">AUTO PILOT Circuit Breaker - OPEN (pull out)</strong> gelir. Mantık: control → disconnect → manual trim → isolate.`,
+      steps:[
+        'Control Wheel - GRASP FIRMLY (regain control of airplane)',
+        'A/P TRIM DISC Button - PRESS and HOLD (throughout recovery)',
+        'Elevator Trim Control - ADJUST MANUALLY (as necessary)',
+        'AUTO PILOT Circuit Breaker - OPEN (pull out)'
+      ]
+    },
+    {
+      id:'low-vacuum', category:'SYSTEM', title:'LOW VACUUM ANNUNCIATOR COMES ON',
+      note:'İlk iş gerçekten vacuum düşük mü teyit etmek.',
+      explanation:`LOW VACUUM annunciator gördüğünde bold item senden önce durumu teyit etmeni ister. Bu yüzden <strong class="term">Vacuum Indicator (VAC) - CHECK EIS ENGINE PAGE (make sure vacuum pointer is in green band limits)</strong> yapılır. Yani annunciator'u gördün diye hemen başka bir işlem ezberlemek yerine, EIS üzerinde gerçek vacuum indication'ı kontrol edersin. Bu prosedürün hafıza anahtarı: warning geldi → VAC'i EIS'te check et.`,
+      steps:[
+        'Vacuum Indicator (VAC) - CHECK EIS ENGINE PAGE (make sure vacuum pointer is in green band limits)'
+      ]
+    },
+    {
+      id:'co-high', category:'CABIN / CO', title:'CO LVL HIGH ANNUNCIATOR COMES ON',
+      note:'CO uyarısında ısıtmayı kes, temiz hava ver.',
+      explanation:`CO LVL HIGH uyarısında amaç olası karbonmonoksit kaynağını azaltmak ve kabini temiz havayla havalandırmaktır. İlk olarak <strong class="term">CABIN HT Control Knob - OFF (push full in)</strong> ile heater kapatılır. Sonra dışarıdan temiz hava almak için <strong class="term">CABIN AIR Control Knob - ON (pull full out)</strong> yapılır ve <strong class="term">Cabin Vents - OPEN</strong> ile havalandırma artırılır. Ezber mantığı: heat OFF → fresh air ON → vents OPEN.`,
+      steps:[
+        'CABIN HT Control Knob - OFF (push full in)',
+        'CABIN AIR Control Knob - ON (pull full out)',
+        'Cabin Vents - OPEN'
+      ]
+    }
+  ];
+
+  const storageKey = 'tafa-bold-face-trainer-v2';
+  const legacyKey = 'tafa-bold-face-trainer-v1';
+
+  const $ = id => document.getElementById(id);
+  const homeView = $('homeView');
+  const trainerView = $('trainerView');
+  const statsView = $('statsView');
+  const cards = $('cards');
+  const guideGrid = $('guideGrid');
+  const resetOverlay = $('resetOverlay');
+  const htmlEl = document.documentElement;
+
+  let state = loadState();
+  let current = null;
+  let currentIndex = 0;
+  let currentMistakes = 0;
+  let locked = false;
+
+  function todayKey(){
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function makeDefaultProgress(){
+    const obj = {};
+    procedures.forEach(p => obj[p.id] = { completions:0, currentStep:0, mistakes:0, answered:0, correct:0, wrong:0 });
+    return obj;
+  }
+
+  function makeDefaultAnalytics(){
+    return {
+      todayDate: todayKey(),
+      todayAnswered:0,
+      todayCorrect:0,
+      todayWrong:0,
+      todayCompleted:0,
+      lifetimeAnswered:0,
+      lifetimeCorrect:0,
+      lifetimeWrong:0,
+      lifetimeCompleted:0
+    };
+  }
+
+  function makeDefaultState(){
+    return {
+      theme:'light',
+      explainOpen:true,
+      progress:makeDefaultProgress(),
+      analytics:makeDefaultAnalytics()
+    };
+  }
+
+  function loadState(){
+    const base = makeDefaultState();
+    let raw = null;
+    try { raw = JSON.parse(localStorage.getItem(storageKey) || 'null'); } catch(e){}
+
+    if(!raw){
+      try{
+        const legacy = JSON.parse(localStorage.getItem(legacyKey) || 'null');
+        if(legacy && typeof legacy === 'object'){
+          Object.keys(base.progress).forEach(id => {
+            base.progress[id] = Object.assign(base.progress[id], legacy[id] || {});
+          });
+        }
+      }catch(e){}
+      saveState(base);
+      return normalizeToday(base);
+    }
+
+    const merged = {
+      theme: raw.theme || base.theme,
+      explainOpen: typeof raw.explainOpen === 'boolean' ? raw.explainOpen : true,
+      progress: makeDefaultProgress(),
+      analytics: Object.assign(makeDefaultAnalytics(), raw.analytics || {})
+    };
+    Object.keys(merged.progress).forEach(id => {
+      merged.progress[id] = Object.assign(merged.progress[id], raw.progress?.[id] || {});
+    });
+    return normalizeToday(merged);
+  }
+
+  function normalizeToday(s){
+    if(!s.analytics) s.analytics = makeDefaultAnalytics();
+    if(s.analytics.todayDate !== todayKey()){
+      s.analytics.todayDate = todayKey();
+      s.analytics.todayAnswered = 0;
+      s.analytics.todayCorrect = 0;
+      s.analytics.todayWrong = 0;
+      s.analytics.todayCompleted = 0;
+      saveState(s);
+    }
+    return s;
+  }
+
+  function saveState(nextState = state){
+    try{ localStorage.setItem(storageKey, JSON.stringify(nextState)); }catch(e){}
+  }
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function allSteps(){
+    return [...new Set(procedures.flatMap(p => p.steps))];
+  }
+  const globalStepBank = allSteps();
+
+  function applyTheme(){
+    htmlEl.setAttribute('data-theme', state.theme === 'dark' ? 'dark' : 'light');
+    $('themeBtn').textContent = state.theme === 'dark' ? '☀️ Gündüz modu' : '🌙 Gece modu';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute('content', state.theme === 'dark' ? '#000000' : '#f5f5f7');
+  }
+
+  function updateExplainVisibility(){
+    $('explainBox').style.display = state.explainOpen ? '' : 'none';
+    $('toggleExplainBtn').textContent = state.explainOpen ? 'Açıklamayı gizle' : 'Açıklama';
+  }
+
+  function renderHome(){
+    cards.innerHTML = '';
+    procedures.forEach(p => {
+      const s = state.progress[p.id];
+      const pct = Math.min(100, Math.round((s.currentStep / p.steps.length) * 100));
+      const btn = document.createElement('button');
+      btn.className = 'card';
+      btn.type = 'button';
+      btn.innerHTML = `
+        <div class="cardtop">
+          ${s.completions>0 ? `<span class="tag mastered">✓ ${s.completions} tur</span>` : ''}
+          <span class="tag">${p.steps.length} adım</span>
+        </div>
+        <h3>${escapeHtml(p.title)}</h3>
+        <div class="cardbottom">
+          <span class="steps">${s.currentStep>0 ? s.currentStep+' / '+p.steps.length+' ilerleme' : 'Başlamak için dokun'}</span>
+          <div class="miniProgress"><span style="width:${pct}%"></span></div>
+        </div>`;
+      btn.addEventListener('click', () => openProcedure(p.id));
+      cards.appendChild(btn);
+    });
+    renderGuide();
+    updateSummary();
+  }
+
+  function renderGuide(){
+    guideGrid.innerHTML = '';
+    procedures.forEach(p => {
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>${escapeHtml(p.title)} <span>${p.steps.length} adım</span></summary>
+        <div class="guideContent">${p.explanation}</div>`;
+      guideGrid.appendChild(d);
+    });
+  }
+
+  function updateSummary(){
+    const mastered = procedures.filter(p => (state.progress[p.id]?.completions || 0) > 0).length;
+    const completions = procedures.reduce((sum,p)=>sum+(state.progress[p.id]?.completions||0),0);
+    $('totalProcedures').textContent = procedures.length;
+    $('masteredCount').textContent = mastered;
+    $('totalCompletions').textContent = completions;
+    $('todayAnsweredMini').textContent = state.analytics.todayAnswered;
+  }
+
+  function openProcedure(id){
+    current = procedures.find(p => p.id === id);
+    if(!current) return;
+    const s = state.progress[id];
+    currentIndex = Math.min(Math.max(0, s.currentStep || 0), current.steps.length - 1);
+    currentMistakes = s.mistakes || 0;
+    if(s.currentStep >= current.steps.length) currentIndex = 0;
+    showView('trainer');
+    $('trainerTitle').textContent = current.title;
+    $('trainerSubtitle').textContent = 'Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.';
+    $('explainText').innerHTML = current.explanation;
+    $('completePanel').classList.remove('show');
+    $('questionArea').style.display = '';
+    updateExplainVisibility();
+    window.scrollTo({top:0, behavior:'auto'});
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    if(!current) return;
+    locked = false;
+    $('feedback').className = 'feedback';
+    $('feedback').textContent = '';
+    $('stepCounter').textContent = `${currentIndex+1} / ${current.steps.length}`;
+    $('progressText').textContent = `${currentIndex} / ${current.steps.length} adım tamam`;
+    $('mistakeText').textContent = `Toplam yanlış: ${currentMistakes}`;
+    $('progressBar').style.width = `${(currentIndex/current.steps.length)*100}%`;
+    $('questionText').textContent = `${currentIndex+1}. adım hangisi?`;
+    renderCompleted();
+    renderChoices();
+  }
+
+  function renderCompleted(){
+    const list = $('completedList');
+    list.innerHTML = '';
+    for(let i=0;i<currentIndex;i++){
+      const item = document.createElement('div');
+      item.className = 'doneItem';
+      item.innerHTML = `<span class="doneNum">${i+1}</span><span>${formatText(current.steps[i])}</span>`;
+      list.appendChild(item);
+    }
+  }
+
+  function buildOptions(){
+    const correct = current.steps[currentIndex];
+    const candidates = [];
+    current.steps.forEach((step, idx) => {
+      if(step !== correct) candidates.push({step, distance:Math.abs(idx-currentIndex)});
+    });
+    candidates.sort((a,b)=>a.distance-b.distance);
+    const picked = [];
+    for(const c of candidates){
+      if(picked.length>=2) break;
+      if(!picked.includes(c.step)) picked.push(c.step);
+    }
+    const pool = shuffle(globalStepBank.filter(s => s !== correct && !picked.includes(s)));
+    while(picked.length < 3 && pool.length) picked.push(pool.pop());
+    return shuffle([correct, ...picked]);
+  }
+
+  function renderChoices(){
+    const wrap = $('choices');
+    wrap.innerHTML = '';
+    const correct = current.steps[currentIndex];
+    buildOptions().forEach(text => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'choice';
+      btn.innerHTML = formatText(text);
+      btn.addEventListener('click', () => answer(btn, text === correct));
+      wrap.appendChild(btn);
+    });
+  }
+
+  function recordAnswer(procId, isCorrect){
+    state = normalizeToday(state);
+    const p = state.progress[procId];
+    p.answered = (p.answered || 0) + 1;
+    if(isCorrect) p.correct = (p.correct || 0) + 1;
+    else p.wrong = (p.wrong || 0) + 1;
+
+    state.analytics.todayAnswered++;
+    state.analytics.lifetimeAnswered++;
+    if(isCorrect){
+      state.analytics.todayCorrect++;
+      state.analytics.lifetimeCorrect++;
+    } else {
+      state.analytics.todayWrong++;
+      state.analytics.lifetimeWrong++;
+    }
+  }
+
+  function answer(btn, isCorrect){
+    if(locked) return;
+    locked = true;
+    [...$('choices').querySelectorAll('button')].forEach(b => b.disabled = true);
+    recordAnswer(current.id, isCorrect);
+
+    if(isCorrect){
+      btn.classList.add('correct');
+      $('feedback').textContent = 'Doğru. Sıradaki adıma geçiyorsun.';
+      $('feedback').className = 'feedback good show';
+      setTimeout(() => {
+        currentIndex++;
+        state.progress[current.id].currentStep = currentIndex;
+        saveState();
+        if(currentIndex >= current.steps.length){
+          completeProcedure();
+        } else {
+          renderQuestion();
+        }
+      }, 420);
+    } else {
+      btn.classList.add('wrong');
+      currentMistakes++;
+      state.progress[current.id].mistakes = currentMistakes;
+      state.progress[current.id].currentStep = 0;
+      saveState();
+      resetOverlay.classList.add('show');
+      $('resetMessage').textContent = `${current.title}: 1. adımdan yeniden başlıyor.`;
+      setTimeout(() => {
+        currentIndex = 0;
+        resetOverlay.classList.remove('show');
+        renderQuestion();
+      }, 950);
+    }
+  }
+
+  function completeProcedure(){
+    state.progress[current.id].completions = (state.progress[current.id].completions || 0) + 1;
+    state.progress[current.id].currentStep = 0;
+    state.analytics.todayCompleted++;
+    state.analytics.lifetimeCompleted++;
+    saveState();
+    $('questionArea').style.display = 'none';
+    $('progressBar').style.width = '100%';
+    $('progressText').textContent = `${current.steps.length} / ${current.steps.length} adım tamam`;
+    $('stepCounter').textContent = `${current.steps.length} / ${current.steps.length}`;
+    $('completeText').textContent = `${current.title}: ${current.steps.length} adımı doğru sırayla tamamladın. Aşağıda tam sırayı tekrar görüp ister bir tur daha atabilirsin.`;
+    const review = $('sequenceReview');
+    review.innerHTML = '';
+    current.steps.forEach((step,i) => {
+      const row = document.createElement('div');
+      row.className = 'reviewItem';
+      row.innerHTML = `<span class="reviewNum">${i+1}.</span><span>${formatText(step)}</span>`;
+      review.appendChild(row);
+    });
+    $('completePanel').classList.add('show');
+    updateSummary();
+  }
+
+  function repeatCurrent(){
+    if(!current) return;
+    currentIndex = 0;
+    state.progress[current.id].currentStep = 0;
+    saveState();
+    $('completePanel').classList.remove('show');
+    $('questionArea').style.display = '';
+    renderQuestion();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function showView(name){
+    homeView.classList.remove('active');
+    trainerView.classList.remove('active');
+    statsView.classList.remove('active');
+    if(name === 'home') homeView.classList.add('active');
+    if(name === 'trainer') trainerView.classList.add('active');
+    if(name === 'stats') statsView.classList.add('active');
+  }
+
+  function goHome(){
+    current = null;
+    $('completePanel').classList.remove('show');
+    $('questionArea').style.display = '';
+    renderHome();
+    renderStats();
+    showView('home');
+    window.scrollTo({top:0, behavior:'auto'});
+  }
+
+  function openStats(){
+    renderStats();
+    showView('stats');
+    window.scrollTo({top:0, behavior:'auto'});
+  }
+
+  function renderStats(){
+    $('todayDateText').textContent = new Date().toLocaleDateString('tr-TR', { day:'2-digit', month:'long', year:'numeric' });
+    $('todayAnswered').textContent = state.analytics.todayAnswered;
+    $('todayCorrect').textContent = state.analytics.todayCorrect;
+    $('todayWrong').textContent = state.analytics.todayWrong;
+    $('todayCompleted').textContent = state.analytics.todayCompleted;
+    $('lifeAnswered').textContent = state.analytics.lifetimeAnswered;
+    $('lifeCorrect').textContent = state.analytics.lifetimeCorrect;
+    $('lifeWrong').textContent = state.analytics.lifetimeWrong;
+    $('lifeCompleted').textContent = state.analytics.lifetimeCompleted;
+
+    const table = $('statsTable');
+    table.innerHTML = `
+      <div class="tableRow head">
+        <div>Emergency</div>
+        <div>Tur</div>
+        <div>Yanlış</div>
+        <div>Çözülen</div>
+        <div>Doğru</div>
+      </div>`;
+
+    procedures.forEach(p => {
+      const s = state.progress[p.id];
+      const row = document.createElement('div');
+      row.className = 'tableRow';
+      row.innerHTML = `
+        <div class="procName">${escapeHtml(p.title)}</div>
+        <div>${s.completions || 0}</div>
+        <div>${s.mistakes || 0}</div>
+        <div>${s.answered || 0}</div>
+        <div>${s.correct || 0}</div>`;
+      table.appendChild(row);
+    });
+  }
+
+  function toggleTheme(){
+    state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    applyTheme();
+    saveState();
+  }
+
+  function toggleExplain(){
+    state.explainOpen = !state.explainOpen;
+    updateExplainVisibility();
+    saveState();
+  }
+
+  function resetAll(){
+    if(!confirm('Tüm emergency ilerlemesi ve istatistikler sıfırlansın mı?')) return;
+    state = makeDefaultState();
+    applyTheme();
+    saveState();
+    renderHome();
+    renderStats();
+    if(current){
+      currentIndex = 0;
+      currentMistakes = 0;
+      current = null;
+    }
+    showView('home');
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  }
+  function formatText(s){
+    return escapeHtml(s).replace(/\n/g,'<br>');
+  }
+
+  $('backBtn').addEventListener('click', goHome);
+  $('menuBtn').addEventListener('click', goHome);
+  $('repeatBtn').addEventListener('click', repeatCurrent);
+  $('resetAllBtn').addEventListener('click', resetAll);
+  $('statsBtn').addEventListener('click', openStats);
+  $('statsBackBtn').addEventListener('click', goHome);
+  $('themeBtn').addEventListener('click', toggleTheme);
+  $('toggleExplainBtn').addEventListener('click', toggleExplain);
+
+  document.addEventListener('keydown', e => {
+    if(e.key.toLowerCase() === 'd') toggleTheme();
+    if(e.key === 'Escape') goHome();
+    if(!current || locked || !trainerView.classList.contains('active')) return;
+    const n = Number(e.key);
+    if(n>=1 && n<=4){
+      const buttons = [...$('choices').querySelectorAll('button')];
+      if(buttons[n-1]) buttons[n-1].click();
+    }
+  });
+
+  applyTheme();
+  updateExplainVisibility();
+  renderHome();
+  renderStats();
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
