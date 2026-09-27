@@ -52,6 +52,7 @@
 
     .sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:25px 2px 12px}.sectionhead h2{margin:0;font-size:22px;font-weight:780;letter-spacing:-.03em}.sectionhead p{margin:4px 0 0;color:var(--muted);font-size:13px;font-weight:480}
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:20px;min-height:158px;box-shadow:var(--shadow-soft);transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;touch-action:manipulation;cursor:pointer}.card:hover{transform:translateY(-1px);border-color:var(--line-strong);box-shadow:var(--shadow)}.card:active{transform:scale(.994)}
+    .procedureSections{display:grid;gap:28px}.procedureSection{display:grid;gap:11px}.procedureSectionHead{display:flex;align-items:center;gap:10px;padding:0 4px}.procedureSectionHeadText{min-width:0}.procedureSectionHeadText b{display:block;font-size:16px;font-weight:790;letter-spacing:-.025em}.procedureSectionHeadText span{display:block;margin-top:2px;color:var(--muted);font-size:11px;font-weight:560}.sectionIcon,.cardIcon{display:grid;place-items:center;color:#6e6e73;background:var(--panel-soft);border:1px solid var(--line);flex:none}.sectionIcon{width:34px;height:34px;border-radius:11px}.cardIcon{width:30px;height:30px;border-radius:10px}.sectionIcon svg{width:18px;height:18px}.cardIcon svg{width:16px;height:16px}html[data-theme="dark"] .sectionIcon,html[data-theme="dark"] .cardIcon{color:#b0b0b5}.cardTitleRow{display:flex;align-items:flex-start;gap:10px;margin:11px 0 21px}.cardTitleRow h3{margin:2px 0 0!important;max-width:none!important;flex:1}
     .cardtop{display:flex;justify-content:flex-end;gap:7px;align-items:flex-start;min-height:28px}.tag{font-size:10.5px;font-weight:700;color:var(--muted);background:var(--panel-soft);padding:6px 8px;border-radius:999px;white-space:nowrap;border:1px solid var(--line)}.tag.perfect{color:var(--ok);background:var(--ok-soft);border-color:transparent}.tag.review{color:var(--bad);background:var(--bad-soft);border-color:transparent}
     .card h3{font-size:18px;line-height:1.25;margin:11px 0 21px;letter-spacing:-.025em;font-weight:760;max-width:94%}.cardbottom{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.statusBlock{min-width:0}.steps{display:block;font-size:12px;color:var(--muted);font-weight:650;margin-bottom:8px}.miniProgress{height:6px;background:#e9e9ed;border-radius:999px;overflow:hidden;width:100%}html[data-theme="dark"] .miniProgress{background:#343438}.miniProgress span{display:block;height:100%;border-radius:999px;background:var(--accent);transition:width .25s ease}.miniProgress.mastered span{background:var(--ok)}.miniProgress.error span{background:var(--bad)}.miniProgress.idle span{background:#c8c8cd}.quickBtn{border:0;background:var(--panel-soft);border:1px solid var(--line);border-radius:11px;min-height:36px;padding:0 11px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}.quickBtn:hover{background:var(--panel)}
 
@@ -74,54 +75,61 @@
     @media(max-width:900px){.summary,.statsGrid{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.todayCard{grid-template-columns:1fr 1fr 1fr}.todayLead{grid-column:1/-1}.historyRow{grid-template-columns:minmax(0,1.7fr) .7fr 1.2fr}.historyRow div:nth-child(3),.historyRow div:nth-child(5){display:none}}
     @media(max-width:720px){.app{padding:13px 11px 34px}.topbar{align-items:flex-start;flex-direction:column}.toolbar{width:100%;justify-content:flex-start}.brandtext span{display:none}.hero{padding:29px 20px 23px;border-radius:22px}.hero:before{left:20px}h1{font-size:clamp(40px,13vw,56px)}.trainerHeader,.statsHeader,.questionArea,.progressWrap,.statsBody{padding-left:14px;padding-right:14px}.explainBox{margin-left:14px;margin-right:14px}.panel{border-radius:22px}.card{padding:18px}.historyRow{grid-template-columns:minmax(0,1fr) .65fr 1.05fr}.reviewModal{border-radius:22px;padding:17px}}
     @media(max-width:440px){.summary,.statsGrid{grid-template-columns:1fr 1fr}.todayCard{grid-template-columns:1fr 1fr}.todayLead{grid-column:1/-1}.todayMetric:last-child{grid-column:1/-1}.stat b,.statsCard b{font-size:21px}.cardbottom{grid-template-columns:1fr}.quickBtn{justify-self:start}.weakRow{grid-template-columns:36px minmax(0,1fr)}.weakCount{grid-column:2}.toolbar{gap:6px}.iconbtn{padding:0 10px;font-size:12px}}
-    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-  </style>
+    @keyframes etErrorPulse{0%{transform:translateX(0)}24%{transform:translateX(-3px)}48%{transform:translateX(3px)}72%{transform:translateX(-1px)}100%{transform:translateX(0)}}
+    @keyframes etSuccessPop{0%{transform:scale(.88);opacity:.55}55%{transform:scale(1.07);opacity:1}100%{transform:scale(1)}}
+    .progressWrap.errorPulse{animation:etErrorPulse .28s ease}.completeIcon.successPop{animation:etSuccessPop .36s cubic-bezier(.2,.8,.2,1)}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  
+    .modeOverlay{position:fixed;inset:0;display:none;place-items:center;background:rgba(245,245,247,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:80;padding:18px}html[data-theme="dark"] .modeOverlay{background:rgba(0,0,0,.76)}.modeOverlay.show{display:grid}.modeModal{width:min(780px,100%);background:var(--panel);border:1px solid var(--line);box-shadow:0 28px 90px rgba(0,0,0,.16);border-radius:30px;padding:26px}.modeModal h2{font-size:clamp(32px,7vw,52px);line-height:1;letter-spacing:-.055em;margin:0 0 10px;font-weight:830}.modeModal>p{color:var(--muted);line-height:1.6;margin:0 0 20px;max-width:640px}.modeChoices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modeChoice{text-align:left;border:1px solid var(--line);background:var(--panel-soft);border-radius:22px;padding:20px;cursor:pointer;min-height:170px;transition:.16s ease}.modeChoice:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--shadow)}.modeChoice b{display:block;font-size:21px;letter-spacing:-.03em;margin-bottom:8px}.modeChoice span{display:block;color:var(--muted);font-size:13px;line-height:1.55}.modeChoice .modePill{display:inline-block;margin-top:14px;font-size:11px;font-weight:750;color:var(--text);background:var(--panel);border:1px solid var(--line);padding:7px 9px;border-radius:999px}.modeHint{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5}.modeClose{float:right;margin:-4px -4px 0 10px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel-soft);font-size:19px;cursor:pointer}.modeBadge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:680;background:var(--panel-soft);border:1px solid var(--line);padding:7px 10px;border-radius:999px;margin-bottom:14px}.modeBadge:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
+    @media(max-width:650px){.modeChoices{grid-template-columns:1fr}.modeModal{padding:21px;border-radius:24px}.modeChoice{min-height:0}}
+</style>
 </head>
 <body>
 <div class="app">
   <div class="topbar">
-    <div class="brand"><div class="brandmark">ET</div><div class="brandtext"><strong>Emergency Trainer</strong><span>Bold Face Memory Trainer</span></div></div>
-    <div class="toolbar"><button class="iconbtn" id="statsBtn">İstatistikler</button><button class="iconbtn" id="themeBtn">🌙 Gece modu</button><button class="iconbtn" id="resetAllBtn">Sıfırla</button></div>
+    <div class="brand"><div class="brandmark">ET</div><div class="brandtext"><strong>Emergency Trainer</strong><span id="brandSubtitle">Memory Trainer</span></div></div>
+    <div class="toolbar"><button class="iconbtn" id="modeBtn">Mod</button><button class="iconbtn" id="statsBtn">İstatistikler</button><button class="iconbtn" id="themeBtn">🌙 Gece modu</button><button class="iconbtn" id="resetAllBtn">Sıfırla</button></div>
   </div>
 
   <main class="home active" id="homeView">
-    <section class="hero"><h1>Emergency Trainer</h1><p>Bold face adımlarını doğru sırayla öğren. Yanlış cevapta aynı emergency’nin başına dön.</p>
-      <div class="summary"><div class="stat"><b id="totalProcedures">0</b><span>Emergency</span></div><div class="stat"><b id="masteredCount">0</b><span>Perfect / mastered</span></div><div class="stat"><b id="totalPerfects">0</b><span>Perfect Run</span></div><div class="stat"><b id="todayAnsweredMini">0</b><span>Bugün çözülen soru</span></div></div>
+    <section class="hero"><div class="modeBadge" id="modeBadge">Bold Items</div><h1>Emergency Trainer</h1><p id="heroSubtitle">Emergency adımlarını doğru sırayla öğren.</p>
+      <div class="summary"><div class="stat"><b id="totalProcedures">0</b><span id="procedureStatLabel">Emergency</span></div><div class="stat"><b id="masteredCount">0</b><span>Perfect / mastered</span></div><div class="stat"><b id="totalPerfects">0</b><span>Perfect Run</span></div><div class="stat"><b id="todayAnsweredMini">0</b><span>Bugün çözülen soru</span></div></div>
     </section>
 
     <section class="todayCard" aria-label="Bugünün özeti"><div class="todayLead"><b>Today</b><span id="todayLine">Bugünkü çalışma özeti</span></div><div class="todayMetric"><b id="todayAnsweredHome">0</b><span>Soru</span></div><div class="todayMetric"><b id="todayCorrectHome">0</b><span>Doğru</span></div><div class="todayMetric"><b id="todayWrongHome">0</b><span>Yanlış</span></div><div class="todayMetric"><b id="todayAccuracyHome">—</b><span>Başarı</span></div></section>
 
-    <div class="sectionhead"><div><h2>Choose an emergency</h2><p>Bir prosedür seç ve sırayı çalış.</p></div></div>
+    <div class="sectionhead"><div><h2 id="chooseTitle">Choose an emergency</h2><p id="chooseSubtitle">Bir prosedür seç ve sırayı çalış.</p></div></div>
     <section class="grid" id="cards"></section>
 
     <section id="weakSection"><div class="sectionhead"><div><h2>Weak Areas</h2><p>En çok zorlandığın emergency ve adımlar.</p></div></div><div class="weakList" id="weakList"></div></section>
 
     <section class="guide"><div class="sectionhead"><div><h2>Emergency logic</h2><p>Her adımın neden o sırada yapıldığını anlaşılır biçimde öğren.</p></div></div><div class="guideGrid" id="guideGrid"></div></section>
-    <p class="helperNote" style="color:var(--muted);font-size:11px;line-height:1.55;margin:18px 3px 0">Not: Açıklamalar ezberi kolaylaştıran mantık anlatımıdır; checklist metni değildir. Uçuşta geçerli checklist, POH/AFM ve okul prosedürleri esastır.</p>
+    <p class="helperNote" style="color:var(--muted);font-size:11px;line-height:1.55;margin:18px 3px 0">Not: Türkçe açıklamalar ezberi kolaylaştıran mantık anlatımıdır; checklist metni değildir. Full Procedures modu POH Section 3 Emergency Procedures Checklist adımlarını çalıştırır. Uçuşta geçerli checklist, POH/AFM ve okul prosedürleri esastır.</p>
   </main>
 
   <main class="trainer" id="trainerView"><section class="panel">
     <div class="trainerHeader"><div class="navrow"><button class="backbtn" id="backBtn">← Ana sayfa</button><div style="display:flex;gap:8px;align-items:center"><button class="smallbtn" id="toggleExplainBtn">Açıklama</button><span class="counter" id="stepCounter">1 / 5</span></div></div><div class="titleblock"><h2 id="trainerTitle">CABIN FIRE</h2><p id="trainerSubtitle">Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.</p></div></div>
     <div class="explainBox" id="explainBox"><b>Mantık / neden böyle?</b><p id="explainText"></p></div>
     <div class="progressWrap"><div class="progressMeta"><span id="progressText">0 / 5 adım tamam</span><span id="mistakeText">Henüz hata yok</span></div><div class="progressTrack"><div class="progressBar" id="progressBar"></div></div></div>
-    <div class="questionArea" id="questionArea"><div class="completedList" id="completedList"></div><div class="prompt">SIRADAKİ HAFIZA ADIMI</div><div class="question" id="questionText">1. adım hangisi?</div><div class="choices" id="choices"></div><div class="feedback" id="feedback"></div></div>
+    <div class="questionArea" id="questionArea"><div class="completedList" id="completedList"></div><div class="prompt">SIRADAKİ ADIM</div><div class="question" id="questionText">1. adım hangisi?</div><div class="choices" id="choices"></div><div class="feedback" id="feedback"></div></div>
     <div class="complete" id="completePanel"><div class="completeIcon">✓</div><div class="completionKicker" id="completionKicker">Perfect Run</div><h3 id="completeTitle">Perfect Run.</h3><p id="completeText"></p><div class="completeStats" id="completeStats"></div><div class="actions"><button class="primary" id="repeatBtn">Bir tur daha</button><button class="secondary" id="menuBtn">Emergency seç</button></div><div class="sequenceReview" id="sequenceReview"></div></div>
   </section></main>
 
-  <main class="statsView" id="statsView"><section class="panel"><div class="statsHeader"><div class="navrow"><button class="backbtn" id="statsBackBtn">← Ana sayfa</button><span class="counter" id="todayDateText">Bugün</span></div><div class="titleblock"><h2>İstatistikler</h2><p>Bugün, tüm zamanlar ve hangi adımda daha çok hata yaptığın.</p></div></div><div class="statsBody">
+  <main class="statsView" id="statsView"><section class="panel"><div class="statsHeader"><div class="navrow"><button class="backbtn" id="statsBackBtn">← Ana sayfa</button><span class="counter" id="todayDateText">Bugün</span></div><div class="titleblock"><h2>İstatistikler</h2><p id="statsSubtitle">Bugün, tüm zamanlar ve hangi adımda daha çok hata yaptığın.</p></div></div><div class="statsBody">
     <div class="statsSubsection" style="margin-top:0"><h3>Bugün</h3><div class="statsGrid"><div class="statsCard"><b id="todayAnswered">0</b><span>Çözülen soru</span></div><div class="statsCard"><b id="todayCorrect">0</b><span>Doğru</span></div><div class="statsCard"><b id="todayWrong">0</b><span>Yanlış</span></div><div class="statsCard"><b id="todayCompleted">0</b><span>Tamamlanan tur</span></div></div></div>
     <div class="statsSubsection"><h3>Tüm zamanlar</h3><div class="statsGrid"><div class="statsCard"><b id="lifeAnswered">0</b><span>Toplam soru</span></div><div class="statsCard"><b id="lifeCorrect">0</b><span>Toplam doğru</span></div><div class="statsCard"><b id="lifeWrong">0</b><span>Toplam yanlış</span></div><div class="statsCard"><b id="lifeCompleted">0</b><span>Tamamlanan tur</span></div></div></div>
     <div class="statsSubsection"><h3>Hata geçmişi</h3><div class="historyList" id="statsTable"></div></div>
   </div></section></main>
 </div>
 
+<div class="modeOverlay" id="modeOverlay"><div class="modeModal"><button class="modeClose" id="modeCloseBtn" aria-label="Kapat">×</button><h2>Nasıl çalışmak istiyorsun?</h2><p>Bunu ilk girişte bir kez seçersin. Sonraki açılışlarda doğrudan seçtiğin moda girer. İstersen üstteki <b>Mod</b> düğmesinden daha sonra değiştirebilirsin.</p><div class="modeChoices"><button class="modeChoice" data-mode="bold"><b>Sadece Bold Items öğrenmek istiyorum</b><span>Mevcut hızlı ezber sistemi. Yalnızca hafızadan bilinmesi gereken Bold Face adımlarını çalışırsın.</span><span class="modePill">Hızlı • Memory items</span></button><button class="modeChoice" data-mode="full"><b>Hepsini Öğrenmek İstiyorum</b><span>POH Section 3 Emergency Procedures Checklist içindeki tüm emergency prosedürlerini ve tüm numaralı adımları sırayla çalışırsın.</span><span class="modePill">Kapsamlı • Full procedures</span></button></div><div class="modeHint">Seçimin cihazında saklanır; site her açıldığında tekrar sorulmaz.</div></div></div>
 <div class="resetOverlay" id="resetOverlay"><div class="resetToast"><b>Yanlış — başa sardı.</b><span id="resetMessage"></span></div></div>
 <div class="reviewOverlay" id="reviewOverlay"><div class="reviewModal"><div class="reviewTop"><div><div style="font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--muted);margin-bottom:7px">QUICK REVIEW</div><div class="reviewTitle" id="reviewTitle"></div></div><button class="closeBtn" id="closeReviewBtn" aria-label="Kapat">×</button></div><div class="reviewLogic" id="reviewLogic"></div><div class="reviewSteps" id="reviewSteps"></div></div></div>
 
 <script>
 (() => {
   'use strict';
-  const procedures = [
+  const boldProcedures = [
     {
       id:'takeoff-roll', category:'ENGINE FAILURE', title:'ENGINE FAILURE DURING TAKEOFF ROLL',
       note:'Kalkış koşusunda güç kaybı: durdurma öncelikli.',
@@ -262,94 +270,309 @@
         'Cabin Vents - OPEN'
       ]
     }
+    ,{
+      id:'spin', category:'SPIN', title:'SPIN RECOVERY',
+      note:'İstenmeyen spin: power idle, ailerons neutral, opposite rudder, forward elevator.',
+      explanation:`Spin recovery sırası kontrol girdilerini sistematik olarak ayırır. Önce <strong class="term">RETARD THROTTLE TO IDLE POSITION</strong> ile güç etkisini azaltırsın. <strong class="term">PLACE AILERONS IN NEUTRAL POSITION</strong> ile aileronların spin'i derinleştirmesini önlersin. Sonra <strong class="term">APPLY AND HOLD FULL RUDDER OPPOSITE TO THE DIRECTION OF ROTATION</strong>; rudder stop'a geldikten hemen sonra <strong class="term">MOVE THE CONTROL WHEEL BRISKLY FORWARD FAR ENOUGH TO BREAK THE STALL</strong>. Bu girdileri rotation durana kadar tut, sonra rudder'ı neutralize edip resulting dive'dan smooth recovery yap.`,
+      steps:['RETARD THROTTLE TO IDLE POSITION','PLACE AILERONS IN NEUTRAL POSITION','APPLY AND HOLD FULL RUDDER OPPOSITE TO THE DIRECTION OF ROTATION','JUST AFTER THE RUDDER REACHES THE STOP, MOVE THE CONTROL WHEEL BRISKLY FORWARD FAR ENOUGH TO BREAK THE STALL','HOLD THESE CONTROL INPUTS UNTIL ROTATION STOPS','AS ROTATION STOPS, NEUTRALIZE RUDDER, AND MAKE A SMOOTH RECOVERY FROM THE RESULTING DIVE']
+    }
+
   ];
 
-  const storageKey = 'tafa-bold-face-trainer-v2';
-  const legacyKey = 'tafa-bold-face-trainer-v1';
-  const $ = id => document.getElementById(id);
-  const homeView=$('homeView'), trainerView=$('trainerView'), statsView=$('statsView'), cards=$('cards'), guideGrid=$('guideGrid'), resetOverlay=$('resetOverlay'), reviewOverlay=$('reviewOverlay'), htmlEl=document.documentElement;
-  let state=loadState(), current=null, currentIndex=0, locked=false;
+
+  const fullProcedures = [
+    {
+      id:'full-takeoff-roll', title:'ENGINE FAILURE DURING TAKEOFF ROLL',
+      explanation:`Uçak hâlâ pist üzerindeyken amaç önce uçağı durdurmak, sonra motor ve elektrik kaynaklarını emniyete almaktır. <strong class="term">Throttle Control - IDLE (pull full out)</strong> ile itkiyi kesersin, <strong class="term">Brakes - APPLY</strong> ile kalan pistte durmaya başlarsın. Ardından <strong class="term">Wing Flaps - RETRACT</strong> ile flapleri toplar; <strong class="term">Mixture Control - IDLE CUTOFF</strong>, <strong class="term">MAGNETOS Switch - OFF</strong>, <strong class="term">STBY BATT Switch - OFF</strong> ve <strong class="term">MASTER Switch (ALT and BAT) - OFF</strong> ile yakıt, ateşleme ve elektrik kaynaklarını sırayla kapatırsın. Mantık: stop → clean up → fuel/ignition/electrical secure.`,
+      steps:['Throttle Control - IDLE (pull full out)','Brakes - APPLY','Wing Flaps - RETRACT','Mixture Control - IDLE CUTOFF (pull full out)','MAGNETOS Switch - OFF','STBY BATT Switch - OFF','MASTER Switch (ALT and BAT) - OFF']
+    },
+    {
+      id:'full-after-takeoff', title:'ENGINE FAILURE IMMEDIATELY AFTER TAKEOFF',
+      explanation:`İlk öncelik uçağın uçmaya devam etmesidir. Bu yüzden <strong class="term">Airspeed - 70 KIAS - Flaps UP / 65 KIAS - Flaps 10° - FULL</strong> ile uygun sürati kurarsın. Sonra motoru besleyen kaynakları <strong class="term">Mixture Control - IDLE CUTOFF</strong>, <strong class="term">FUEL SHUTOFF Valve - OFF</strong> ve <strong class="term">MAGNETOS Switch - OFF</strong> ile kesersin. İniş konfigürasyonu için <strong class="term">Wing Flaps - AS REQUIRED (FULL recommended)</strong>, ardından elektrik için <strong class="term">STBY BATT Switch - OFF</strong> ve <strong class="term">MASTER Switch (ALT and BAT) - OFF</strong> gelir. Son bölüm temas öncesi hazırlıktır: <strong class="term">Cabin Door - UNLATCH</strong> ve <strong class="term">Land - STRAIGHT AHEAD</strong>.`,
+      steps:['Airspeed - 70 KIAS - Flaps UP\n65 KIAS - Flaps 10° - FULL','Mixture Control - IDLE CUTOFF (pull full out)','FUEL SHUTOFF Valve - OFF (pull full out)','MAGNETOS Switch - OFF','Wing Flaps - AS REQUIRED (FULL recommended)','STBY BATT Switch - OFF','MASTER Switch (ALT and BAT) - OFF','Cabin Door - UNLATCH','Land - STRAIGHT AHEAD']
+    },
+    {
+      id:'full-restart-flight', title:'ENGINE FAILURE DURING FLIGHT (RESTART PROCEDURES)',
+      explanation:`Önce <strong class="term">Airspeed - 68 KIAS (best glide speed)</strong> ile uçuşu stabilize edip zaman ve mesafe kazanırsın. Sonra yakıt yolunu yeniden kurarsın: <strong class="term">FUEL SHUTOFF Valve - ON</strong>, <strong class="term">FUEL SELECTOR Valve - BOTH</strong>, <strong class="term">FUEL PUMP Switch - ON</strong> ve gerekirse <strong class="term">Mixture Control - RICH</strong>. Ateşlemeyi <strong class="term">MAGNETOS Switch - BOTH (or START if propeller is stopped)</strong> ile kontrol edersin. Motor toparlandıktan sonra elektrikli pompayı normal sisteme geri bırakmak için <strong class="term">FUEL PUMP Switch - OFF</strong> gelir. POH notuna göre fuel flow sıfıra düşerse pump tekrar ON yapılır.`,
+      steps:['Airspeed - 68 KIAS (best glide speed)','FUEL SHUTOFF Valve - ON (push full in)','FUEL SELECTOR Valve - BOTH','FUEL PUMP Switch - ON','Mixture Control - RICH (if restart has not occurred)','MAGNETOS Switch - BOTH (or START if propeller is stopped)','FUEL PUMP Switch - OFF']
+    },
+    {
+      id:'full-emergency-landing-no-power', title:'EMERGENCY LANDING WITHOUT ENGINE POWER',
+      explanation:`Bu prosedür önce insanları ve uçağı temasa hazırlar, sonra enerji kaynaklarını kapatır. <strong class="term">Pilot and Passenger Seat Backs - MOST UPRIGHT POSITION</strong> ve <strong class="term">Seats and Seat Belts - SECURE</strong> ile kabini hazırlarsın. <strong class="term">Airspeed</strong> flap konfigürasyonuna göre kurulur. Sonra <strong class="term">Mixture - IDLE CUTOFF</strong>, <strong class="term">FUEL SHUTOFF - OFF</strong> ve <strong class="term">MAGNETOS - OFF</strong> ile motoru emniyete alırsın. Flap, elektrik ve kapılar temas şartlarına göre hazırlanır; touchdown hafif tail-low, ardından <strong class="term">Brakes - APPLY HEAVILY</strong>.`,
+      steps:['Pilot and Passenger Seat Backs - MOST UPRIGHT POSITION','Seats and Seat Belts - SECURE','Airspeed - 70 KIAS - Flaps UP\n65 KIAS - Flaps 10° - FULL','Mixture Control - IDLE CUTOFF (pull full out)','FUEL SHUTOFF Valve - OFF (pull full out)','MAGNETOS Switch - OFF','Wing Flaps - AS REQUIRED (FULL recommended)','STBY BATT Switch - OFF','MASTER Switch (ALT and BAT) - OFF (when landing is assured)','Doors - UNLATCH PRIOR TO TOUCHDOWN','Touchdown - SLIGHTLY TAIL LOW','Brakes - APPLY HEAVILY']
+    },
+    {
+      id:'full-precautionary-landing', title:'PRECAUTIONARY LANDING WITH ENGINE POWER',
+      explanation:`Motor çalıştığı için önce kabini emniyete alıp kontrollü bir keşif ve yaklaşma yaparsın. <strong class="term">Airspeed - 65 KIAS</strong> ve <strong class="term">Wing Flaps - 20°</strong> ile alanı <strong class="term">FLY OVER</strong> ederek arazi ve engelleri gözlersin. Finalde <strong class="term">Wing Flaps - FULL</strong> ve tekrar <strong class="term">Airspeed - 65 KIAS</strong>. İniş artık garanti olduğunda standby ve master kapatılır, kapılar açılır; touchdown sonrası mixture ve magnetos kapatılıp fren güçlü uygulanır.`,
+      steps:['Pilot and Passenger Seat Backs - MOST UPRIGHT POSITION','Seats and Seat Belts - SECURE','Airspeed - 65 KIAS','Wing Flaps - 20°','Selected Field - FLY OVER (noting terrain and obstructions)','Wing Flaps - FULL (on final approach)','Airspeed - 65 KIAS','STBY BATT Switch - OFF','MASTER Switch (ALT and BAT) - OFF (when landing assured)','Doors - UNLATCH PRIOR TO TOUCHDOWN','Touchdown - SLIGHTLY TAIL LOW','Mixture Control - IDLE CUTOFF (pull full out)','MAGNETOS Switch - OFF','Brakes - APPLY HEAVILY']
+    },
+    {
+      id:'full-ditching', title:'DITCHING',
+      explanation:`Ditching'de sıra önce yardım çağrısı ve kabin hazırlığı, sonra stabil su yaklaşması ve tahliyedir. <strong class="term">Radio - TRANSMIT MAYDAY on 121.5 MHz</strong> ile yer/niyet bildirip 7700 squawk edersin. Ağır eşyaları emniyete alır, koltuk ve kemerleri hazırlarsın. Flap ve güç ile belirtilen alçalma profilini kurar; deniz/rüzgâr durumuna göre yaklaşma yönünü seçersin. Kapıları açıp level attitude ile temas, yüzü koruma, ELT, tahliye ve ancak uçaktan ayrıldıktan sonra can yeleği/raft şişirme sırasıyla gelir.`,
+      steps:['Radio - TRANSMIT MAYDAY on 121.5 MHz (give location, intentions and SQUAWK 7700)','Heavy Objects (in baggage area) - SECURE OR JETTISON (if possible)','Pilot and Passenger Seat Backs - MOST UPRIGHT POSITION','Seats and Seat Belts - SECURE','Wing Flaps - 20° - FULL','Power - ESTABLISH 300 FT/MIN DESCENT AT 55 KIAS','Approach - High Winds, Heavy Seas - INTO THE WIND\nLight Winds, Heavy Swells - PARALLEL TO SWELLS','Cabin Doors - UNLATCH','Touchdown - LEVEL ATTITUDE AT ESTABLISHED RATE OF DESCENT','Face - CUSHION AT TOUCHDOWN (with folded coat)','ELT - ACTIVATE','Airplane - EVACUATE THROUGH CABIN DOORS','Life Vests and Raft - INFLATE WHEN CLEAR OF AIRPLANE']
+    },
+    {
+      id:'full-start-fire-starts', title:'FIRE DURING START ON GROUND — IF ENGINE STARTS',
+      explanation:`İlk hareket <strong class="term">MAGNETOS Switch - START</strong>; amaç motoru çalıştırıp emiş akışıyla alevi içeri çekebilmek. Motor gerçekten çalışırsa <strong class="term">Power - 1800 RPM (for a few minutes)</strong> ile bu akışı sürdürürsün. Sonra <strong class="term">Engine - SHUTDOWN (inspect for damage)</strong> ile motoru kapatıp hasar kontrolüne geçersin. Bu kart yalnızca motorun çalıştığı dalı öğretir.`,
+      steps:['MAGNETOS Switch - START (continue cranking to start the engine)','Power - 1800 RPM (for a few minutes)','Engine - SHUTDOWN (inspect for damage)']
+    },
+    {
+      id:'full-start-fire-fails', title:'FIRE DURING START ON GROUND — IF ENGINE FAILS TO START',
+      explanation:`Motor çalışmazsa cranking devam ederken yakıtı kesip uçağı tahliyeye hazırlarsın. <strong class="term">Throttle Control - FULL</strong>, <strong class="term">Mixture Control - IDLE CUTOFF</strong> ve tekrar <strong class="term">MAGNETOS Switch - START</strong> ile başlar. Ardından fuel shutoff, fuel pump, magnetos, standby battery ve master OFF yapılarak yakıt/ateşleme/elektrik kaynakları kaldırılır. Son bölüm yerdeki güvenliktir: engine secure, parking brake release, extinguisher obtain, evacuate, extinguish ve damage inspect.`,
+      steps:['MAGNETOS Switch - START (continue cranking to start the engine)','Throttle Control - FULL (push full in)','Mixture Control - IDLE CUTOFF (pull full out)','MAGNETOS Switch - START (continue cranking)','FUEL SHUTOFF Valve - OFF (pull full out)','FUEL PUMP Switch - OFF','MAGNETOS Switch - OFF','STBY BATT Switch - OFF','MASTER Switch (ALT and BAT) - OFF','Engine - SECURE','Parking Brake - RELEASE','Fire Extinguisher - OBTAIN (have ground attendants obtain if not installed)','Airplane - EVACUATE','Fire - EXTINGUISH (using fire extinguisher, wool blanket, or dirt)','Fire Damage - INSPECT (repair or replace damaged components and/or wiring before conducting another flight)']
+    },
+    {
+      id:'full-engine-fire', title:'ENGINE FIRE IN FLIGHT',
+      explanation:`Önce yangını besleyen yakıt ve elektriği kesersin: <strong class="term">Mixture - IDLE CUTOFF</strong>, <strong class="term">FUEL SHUTOFF - OFF</strong>, <strong class="term">FUEL PUMP - OFF</strong>, <strong class="term">MASTER - OFF</strong>. Kabin ventleri gerektiği kadar açılır; cabin heat/air OFF ile draft kontrol edilir. Yangın sönmüyorsa <strong class="term">Airspeed - 100 KIAS</strong> ile uygun sınırlar içinde daha yüksek glide sürati aranır. Son adım motor gücü olmadan forced landing prosedürünü uygulamaktır.`,
+      steps:['Mixture Control - IDLE CUTOFF (pull full out)','FUEL SHUTOFF Valve - OFF (pull full out)','FUEL PUMP Switch - OFF','MASTER Switch (ALT and BAT) - OFF','Cabin Vents - OPEN (as needed)','CABIN HT and CABIN AIR Control Knobs - OFF (push full in) (to avoid drafts)','Airspeed - 100 KIAS (if fire is not extinguished, increase glide speed within airspeed limitations)','Forced Landing - EXECUTE (refer to EMERGENCY LANDING WITHOUT ENGINE POWER)']
+    },
+    {
+      id:'full-electrical-fire', title:'ELECTRICAL FIRE IN FLIGHT',
+      explanation:`İlk hedef elektrik enerjisini ve hava akımını kesmektir. <strong class="term">STBY BATT - OFF</strong> ve <strong class="term">MASTER - OFF</strong> ile kaynaklar kapatılır; vents CLOSED ve cabin heat/air OFF ile draft azaltılır. Extinguisher sonrası avionics ve diğer switchler OFF yapılarak olası devreler izole edilir. Yangının tamamen söndüğünden emin olduktan sonra ventler ve cabin heat/air tekrar açılarak duman tahliyesi yapılır.`,
+      steps:['STBY BATT Switch - OFF','MASTER Switch (ALT and BAT) - OFF','Cabin Vents - CLOSED (to avoid drafts)','CABIN HT and CABIN AIR Control Knobs - OFF (push full in) (to avoid drafts)','Fire Extinguisher - ACTIVATE (if available)','AVIONICS Switch (BUS 1 and BUS 2) - OFF','All Other Switches (except MAGNETOS switch) - OFF','Cabin Vents - OPEN (when sure that fire is completely extinguished)','CABIN HT and CABIN AIR Control Knobs - ON (pull full out) (when sure that fire is completely extinguished)']
+    },
+    {
+      id:'full-electrical-fire-restore', title:'ELECTRICAL FIRE — POWER RESTORATION IF REQUIRED',
+      explanation:`Bu dal yalnızca yangın söndürüldükten sonra ve en yakın uygun meydana devam etmek için elektrik gerçekten gerekiyorsa uygulanır. Önce <strong class="term">Circuit Breakers - CHECK</strong>; açık breaker resetlenmez. Sonra ana elektrik <strong class="term">MASTER - ON</strong>, standby <strong class="term">STBY BATT - ARM</strong> ve avionics bus'lar sırayla ON yapılır. Mantık: önce arızalı devreyi yeniden beslememek için kontrol et, sonra gücü kontrollü geri getir.`,
+      steps:['Circuit Breakers - CHECK (for OPEN circuit(s), do not reset)','MASTER Switch (ALT and BAT) - ON','STBY BATT Switch - ARM','AVIONICS Switch (BUS 1) - ON','AVIONICS Switch (BUS 2) - ON']
+    },
+    {
+      id:'full-cabin-fire', title:'CABIN FIRE',
+      explanation:`Kabin yangınında kaynak belirsiz olabileceğinden önce elektrik kesilir: <strong class="term">STBY BATT - OFF</strong> ve <strong class="term">MASTER - OFF</strong>. Sonra draft azaltmak için vents CLOSED ve cabin heat/air OFF yapılır, ardından extinguisher kullanılır. Yangın tamamen söndüğünde vent ve cabin airflow tekrar açılır. Son adım <strong class="term">Land the airplane as soon as possible to inspect for damage</strong>; çünkü görünen alev sönse bile gizli hasar olabilir.`,
+      steps:['STBY BATT Switch - OFF','MASTER Switch (ALT and BAT) - OFF','Cabin Vents - CLOSED (to avoid drafts)','CABIN HT and CABIN AIR Control Knobs - OFF (push full in) (to avoid drafts)','Fire Extinguisher - ACTIVATE (if available)','Cabin Vents - OPEN (when sure that fire is completely extinguished)','CABIN HT and CABIN AIR Control Knobs - ON (pull full out) (when sure that fire is completely extinguished)','Land the airplane as soon as possible to inspect for damage']
+    },
+    {
+      id:'full-wing-fire', title:'WING FIRE',
+      explanation:`Kanat üzerindeki elektrikli tüketicileri kapatmak temel fikirdir: <strong class="term">LAND and TAXI Light Switches - OFF</strong>, <strong class="term">NAV Light Switch - OFF</strong>, <strong class="term">STROBE Light Switch - OFF</strong> ve <strong class="term">PITOT HEAT Switch - OFF</strong>. POH notu ayrıca alevi yakıt tankı ve kabinden uzak tutmak için sideslip ve en kısa sürede inişi vurgular.`,
+      steps:['LAND and TAXI Light Switches - OFF','NAV Light Switch - OFF','STROBE Light Switch - OFF','PITOT HEAT Switch - OFF']
+    },
+    {
+      id:'full-icing', title:'INADVERTENT ICING ENCOUNTER DURING FLIGHT',
+      explanation:`İlk beş adım sistemi koruyup icing şartından çıkmaya yöneliktir: <strong class="term">PITOT HEAT - ON</strong>, turn back/change altitude, cabin heat, defroster ve cabin air. Sonra motor intake icing belirtileri izlenir ve en yakın iniş planlanır. Buz arttıkça daha yüksek güç/approach/stall speed ve uzun landing roll beklenir. Flapler severe tail icing riskinden dolayı retracted bırakılır; görüş için window/scrape/forward slip düşünülür. Final yaklaşma 65–75 KIAS, landing level attitude ve mümkünse missed approach'tan kaçınma ile tamamlanır.`,
+      steps:['PITOT HEAT Switch - ON','Turn back or change altitude (to obtain an outside air temperature that is less conducive to icing)','CABIN HT Control Knob - ON (pull full out)','Defroster Control Outlets - OPEN (to obtain maximum windshield defroster airflow)','CABIN AIR Control Knob - ADJUST (to obtain maximum defroster heat and airflow)','Watch for signs of induction air filter icing; adjust throttle and mixture as necessary','Plan a landing at the nearest airport; with extremely rapid ice build-up select a suitable off-airport landing site','With 0.25 inch or more ice on wing leading edges, expect higher power requirements, higher approach/stall speeds, and longer landing roll','Wing Flaps - LEAVE RETRACTED','Open left window and, if practical, scrape ice from a portion of the windshield','Perform landing approach using a forward slip, if necessary, for improved visibility','Approach - 65 to 75 KIAS depending upon ice accumulation','Landing - LEVEL ATTITUDE','Missed approaches - AVOID WHENEVER POSSIBLE']
+    },
+    {
+      id:'full-static', title:'STATIC SOURCE BLOCKAGE (ERRONEOUS INSTRUMENT READING SUSPECTED)',
+      explanation:`Önce alternatif static kaynağı devreye alırsın: <strong class="term">ALT STATIC AIR Valve - ON</strong>. Alternate static kaynağın kabin basıncından etkilenmesini azaltmak için <strong class="term">Cabin Vents - CLOSED</strong> ve <strong class="term">CABIN HT and CABIN AIR Control Knobs - ON</strong> gelir. Son olarak airspeed için POH Section 5 alternate static correction chart'a başvurulur.`,
+      steps:['ALT STATIC AIR Valve - ON (pull full out)','Cabin Vents - CLOSED','CABIN HT and CABIN AIR Control Knobs - ON (pull full out)','Airspeed - Refer to Section 5, Figure 5-1 (Sheet 2) Airspeed Calibration, Alternate Static Source correction chart']
+    },
+    {
+      id:'full-fuel-vapor', title:'EXCESSIVE FUEL VAPOR — FUEL FLOW STABILIZATION',
+      explanation:`Fuel flow dalgalanması veya power surge varsa önce <strong class="term">FUEL PUMP Switch - ON</strong> ile yakıt akışını desteklersin. <strong class="term">Mixture Control - ADJUST</strong> ile motoru smooth çalıştırırsın. Belirtiler sürerse <strong class="term">Fuel Selector Valve - SELECT OPPOSITE TANK</strong> ile farklı tanktan beslersin. Akış stabilize olduktan sonra <strong class="term">FUEL PUMP Switch - OFF</strong> ile normal sisteme dönersin.`,
+      steps:['FUEL PUMP Switch - ON','Mixture Control - ADJUST (as necessary for smooth engine operation)','Fuel Selector Valve - SELECT OPPOSITE TANK (if vapor symptoms continue)','FUEL PUMP Switch - OFF (after fuel flow has stabilized)']
+    },
+    {
+      id:'full-flat-main', title:'LANDING WITH A FLAT MAIN TIRE',
+      explanation:`Yaklaşma normal yapılır ve <strong class="term">Wing Flaps - FULL</strong> seçilir. Temasta önce sağlam ana tekeri koyup flat tire tarafını aileron ile mümkün olduğunca havada tutarsın. Sonra directional control'ü korurken gerektiği kadar sağlam teker frenini kullanırsın. Amaç hasarlı lastiğe yükü mümkün olduğunca geç bindirmektir.`,
+      steps:['Approach - NORMAL','Wing Flaps - FULL','Touchdown - GOOD MAIN TIRE FIRST (hold airplane off flat tire as long as possible with aileron control)','Directional Control - MAINTAIN (using brake on good wheel as required)']
+    },
+    {
+      id:'full-flat-nose', title:'LANDING WITH A FLAT NOSE TIRE',
+      explanation:`Yaklaşma normaldir; flap seçimi sürate göre yapılır. <strong class="term">Touchdown - ON MAINS</strong> ile önce ana tekerlere konup nosewheel mümkün olduğunca havada tutulur. Nosewheel yere geldiğinde de uçak durana kadar <strong class="term">full up elevator</strong> tutulur. Amaç hasarlı nose tire üzerindeki yükü geciktirmek ve azaltmaktır.`,
+      steps:['Approach - NORMAL','Wing Flaps - AS REQUIRED\n85 to 110 KIAS - Flaps UP - 10°\nBelow 85 KIAS - Flaps 10° - FULL','Touchdown - ON MAINS (hold nosewheel off the ground as long as possible)','When nosewheel touches down, maintain full up elevator as airplane slows to stop']
+    },
+    {
+      id:'full-high-volts', title:'HIGH VOLTS ANNUNCIATOR OR M BATT AMPS MORE THAN 40',
+      explanation:`Önce alternatörü sistemden çıkarırsın: <strong class="term">MASTER Switch (ALT Only) - OFF</strong>. Ardından batarya enerjisini korumak için electrical load hızlıca azaltılır. Önce avionics bus 1, pitot heat ve ışıklar; sonra cabin power kapatılır. COM1/NAV1 aktif frekansa ayarlanıp seçildikten sonra, şart uygunsa AVIONICS BUS 2 kapatılır. Son adım <strong class="term">Land as soon as practical</strong>. Mantık: alternator isolate → load shed → comm/nav preserve → land.`,
+      steps:['MASTER Switch (ALT Only) - OFF','Electrical Load - REDUCE IMMEDIATELY','AVIONICS Switch (BUS 1) - OFF','PITOT HEAT Switch - OFF','BEACON Light Switch - OFF','LAND Light Switch - OFF (use as required for landing)','TAXI Light Switch - OFF','NAV Light Switch - OFF','STROBE Light Switch - OFF','CABIN PWR 12V Switch - OFF (if installed)','COM1 and NAV1 - TUNE TO ACTIVE FREQUENCY','COM1 MIC and NAV1 - SELECT','AVIONICS Switch (BUS 2) - OFF (KEEP ON if in clouds)','Land as soon as practical']
+    },
+    {
+      id:'full-low-volts-low-rpm', title:'LOW VOLTS ANNUNCIATOR COMES ON BELOW 1000 RPM',
+      explanation:`Düşük RPM'de alternator output düşük olabileceği için önce <strong class="term">Throttle Control - 1000 RPM</strong> yapılır. Sonra <strong class="term">LOW VOLTS Annunciator - CHECK OFF</strong>. Uyarı 1000 RPM'de de kalıyorsa uçuş sonrası <strong class="term">Authorized maintenance personnel must do electrical system inspection prior to next flight</strong>. Bu akış önce normal düşük-RPM durumunu elemek içindir.`,
+      steps:['Throttle Control - 1000 RPM','LOW VOLTS Annunciator - CHECK OFF','If LOW VOLTS remains on at 1000 RPM - Authorized maintenance personnel must do electrical system inspection prior to next flight']
+    },
+    {
+      id:'full-low-volts-high-rpm', title:'LOW VOLTS ANNUNCIATOR COMES ON OR DOES NOT GO OFF AT HIGHER RPM',
+      explanation:`Amaç alternator field'i resetleyip şarjın geri gelip gelmediğini doğrulamaktır. <strong class="term">MASTER Switch (ALT Only) - OFF</strong>, <strong class="term">ALT FIELD Circuit Breaker - CHECK IN</strong>, sonra <strong class="term">MASTER Switch (ALT and BAT) - ON</strong>. LOW VOLTS söndü mü, M BUS VOLTS en az 27.5 V mi ve M BATT AMPS charging (+) mı diye kontrol edilir. Uyarı kalırsa ayrı load-shedding kartına geçilir.`,
+      steps:['MASTER Switch (ALT Only) - OFF','ALT FIELD Circuit Breaker - CHECK IN','MASTER Switch (ALT and BAT) - ON','LOW VOLTS Annunciator - CHECK OFF','M BUS VOLTS - CHECK 27.5 V (minimum)','M BATT AMPS - CHECK CHARGING (+)']
+    },
+    {
+      id:'full-low-volts-remains', title:'LOW VOLTS REMAINS ON — LOAD SHEDDING',
+      explanation:`Reset denemesine rağmen LOW VOLTS kalıyorsa alternator yükünü bırakıp batarya süresini korursun. <strong class="term">MASTER Switch (ALT Only) - OFF</strong> ile alternatoru ayırır, electrical load'u azaltırsın. Avionics bus 1, pitot heat, ışıklar ve cabin power kapatılır; COM1/NAV1 aktif frekansa hazırlanıp seçilir. IMC'de gerekli değilse AVIONICS BUS 2 de OFF yapılır. Sonuçta <strong class="term">Land as soon as practical</strong>.`,
+      steps:['MASTER Switch (ALT Only) - OFF','Electrical Load - REDUCE IMMEDIATELY','AVIONICS Switch (BUS 1) - OFF','PITOT HEAT Switch - OFF','BEACON Light Switch - OFF','LAND Light Switch - OFF (use as required for landing)','TAXI Light Switch - OFF','NAV Light Switch - OFF','STROBE Light Switch - OFF','CABIN PWR 12V Switch - OFF (if installed)','COM1 and NAV1 - TUNE TO ACTIVE FREQUENCY','COM1 MIC and NAV1 - SELECT','AVIONICS Switch (BUS 2) - OFF (KEEP ON if in clouds)','Land as soon as practical']
+    },
+    {
+      id:'full-redx-airspeed', title:'RED X — PFD AIRSPEED INDICATOR',
+      explanation:`Önce arızanın güç/circuit breaker kaynaklı olup olmadığını kontrol edersin: <strong class="term">ADC/AHRS Circuit Breakers - CHECK IN</strong>. Açık breaker bir kez resetlenebilir; tekrar açarsa resetlenmez. PFD airspeed güvenilir değilse <strong class="term">Standby Airspeed - USE FOR AIRSPEED INFORMATION</strong> ile yedek göstergede devam edilir.`,
+      steps:['ADC/AHRS Circuit Breakers - CHECK IN (ESS BUS and AVN BUS 1). If open, reset (close). If it opens again, do not reset','Standby Airspeed - USE FOR AIRSPEED INFORMATION']
+    },
+    {
+      id:'full-redx-altitude', title:'RED X — PFD ALTITUDE INDICATOR',
+      explanation:`Önce <strong class="term">ADC/AHRS Circuit Breakers - CHECK IN</strong> ile beslemeyi kontrol edersin; tekrar açan breaker resetlenmez. Sonra standby altimeter'ın barometrik ayarını mevcut basınca göre kontrol edip <strong class="term">USE FOR ALTITUDE INFORMATION</strong> yaparsın.`,
+      steps:['ADC/AHRS Circuit Breakers - CHECK IN (ESS BUS and AVN BUS 1). If open, reset (close). If it opens again, do not reset','Standby Altimeter - CHECK current barometric pressure SET. USE FOR ALTITUDE INFORMATION']
+    },
+    {
+      id:'full-redx-attitude', title:'RED X — PFD ATTITUDE INDICATOR',
+      explanation:`AHRS attitude kaybında önce ADC/AHRS breaker'larını kontrol edersin. Tekrar açan breaker resetlenmez. PFD attitude geçersiz olduğunda temel attitude referansı <strong class="term">Standby Attitude - USE FOR ATTITUDE INFORMATION</strong> olur.`,
+      steps:['ADC/AHRS Circuit Breakers - CHECK IN (ESS BUS and AVN BUS 1). If open, reset (close). If it opens again, do not reset','Standby Attitude - USE FOR ATTITUDE INFORMATION']
+    },
+    {
+      id:'full-redx-hsi', title:'RED X — HORIZONTAL SITUATION INDICATOR (HSI)',
+      explanation:`Heading/HSI kaybında da önce <strong class="term">ADC/AHRS Circuit Breakers - CHECK IN</strong> kontrol edilir. Tekrar açan breaker bırakılır. PFD heading kullanılamadığında <strong class="term">Non-Stabilized Magnetic Compass - USE FOR HEADING INFORMATION</strong> ile yön bilgisine devam edilir.`,
+      steps:['ADC/AHRS Circuit Breakers - CHECK IN (ESS BUS and AVN BUS 1). If open, reset (close). If it opens again, do not reset','Non-Stabilized Magnetic Compass - USE FOR HEADING INFORMATION']
+    },
+    {
+      id:'full-ap-ptrm', title:'AP OR PTRM ANNUNCIATOR(S) COME ON',
+      explanation:`İlk iş uçağın fiziksel kontrolünü geri almaktır: <strong class="term">Control Wheel - GRASP FIRMLY</strong>. Sonra <strong class="term">A/P TRIM DISC Button - PRESS and HOLD</strong> ile otomatik trim/autopilot komutunu bastırırsın. Gerekirse <strong class="term">Elevator Trim Control - ADJUST MANUALLY</strong>; ardından <strong class="term">AUTO PILOT Circuit Breaker - OPEN</strong> ile sistemi izole edip <strong class="term">A/P TRIM DISC Button - RELEASE</strong> yaparsın.`,
+      steps:['Control Wheel - GRASP FIRMLY (regain control of airplane)','A/P TRIM DISC Button - PRESS and HOLD (throughout recovery)','Elevator Trim Control - ADJUST MANUALLY (as necessary)','AUTO PILOT Circuit Breaker - OPEN (pull out)','A/P TRIM DISC Button - RELEASE']
+    },
+    {
+      id:'full-low-vacuum', title:'LOW VACUUM ANNUNCIATOR COMES ON',
+      explanation:`Bu prosedür önce uyarıyı doğrulatır: <strong class="term">Vacuum Indicator (VAC) - CHECK EIS ENGINE PAGE</strong>. Amaç vacuum pointer'ın green band içinde olup olmadığını görmek. POH caution'a göre pointer green band dışında veya standby attitude gyro flag görünüyorsa standby attitude indicator attitude bilgisi için kullanılmamalıdır.`,
+      steps:['Vacuum Indicator (VAC) - CHECK EIS ENGINE PAGE (make sure vacuum pointer is in green band limits)']
+    },
+    {
+      id:'full-co-high', title:'CO LVL HIGH ANNUNCIATOR',
+      explanation:`CO uyarısında önce olası heater kaynağını kesersin: <strong class="term">CABIN HT Control Knob - OFF</strong>. Sonra temiz hava ile seyreltme için <strong class="term">CABIN AIR Control Knob - ON</strong>, <strong class="term">Cabin Vents - OPEN</strong> ve <strong class="term">Cabin Windows - OPEN</strong> gelir. Uyarı buna rağmen kalıyorsa son adım <strong class="term">Land as soon as possible</strong>.`,
+      steps:['CABIN HT Control Knob - OFF (push full in)','CABIN AIR Control Knob - ON (pull full out)','Cabin Vents - OPEN','Cabin Windows - OPEN (163 KIAS maximum windows open speed)','If CO LVL HIGH annunciator remains on - Land as soon as possible']
+    }
+    ,{
+      id:'full-cloud-180', title:'EXECUTING A 180° TURN IN CLOUDS (AHRS FAILED)',
+      explanation:`Bu amplified emergency prosedürü AHRS kaybında ve buluta istemeden girişte course reversal içindir. Önce <strong class="term">non-stabilized magnetic compass heading</strong> not edilir. Standby attitude ile 15° left bank kurulup altitude korunur ve 60 saniye sonra wings level yapılır. Compass sakinleşince reciprocal heading kontrol edilir. Gerekirse wings level tutularak rudder ile skidding turn düzeltmesi yapılır. Son adım altitude/airspeed'i elevator ile dikkatli korumak, roll pointer/index'i aligned tutmak ve yalnız rudder ile steer etmektir.`,
+      steps:['Note the non-stabilized magnetic compass heading','Using the standby attitude, initiate a 15° bank left turn; keep feet off rudder pedals; maintain altitude and 15° bank; continue for 60 seconds, then roll level','When the compass card becomes sufficiently stable, verify heading approximates the reciprocal of the original heading','If necessary, keep wings level and use rudder to make skidding turns to complete the course reversal','Maintain altitude and airspeed with cautious elevator control; keep roll pointer and index aligned and steer only with rudder']
+    },
+    {
+      id:'full-cloud-descent', title:'EMERGENCY DESCENT THROUGH CLOUDS (AHRS FAILED)',
+      explanation:`180° dönüşle VFR'a dönmek uygun değilse bu amplified sequence stabilize bir cloud descent kurar. <strong class="term">Mixture - full rich</strong> ve <strong class="term">Pitot heat - on</strong> ile hazırlanırsın. Power 500–800 ft/min descent için ayarlanır, trim 80 KIAS'a kurulur. Standby attitude ile wings level tutulur; compass trend rudder ile küçük düzeltmelerle kontrol edilir. Cloud'dan çıkınca normal cruise'a dönülür.`,
+      steps:['Apply full rich mixture','Turn pitot heat on','Set power for a 500 to 800 feet per minute rate of descent','Set the elevator trim for a stabilized descent at 80 KIAS','Use the standby attitude to keep wings level','Check trend of compass card movement and make cautious corrections with rudder to stop the turn','Upon breaking out of clouds, resume normal cruising flight']
+    },
+    {
+      id:'full-spiral-clouds', title:'RECOVERY FROM SPIRAL DIVE IN THE CLOUDS (AHRS FAILED)',
+      explanation:`Spiral'da önce enerji artışını durdurup bank'i kaldırırsın. <strong class="term">Throttle - idle</strong>, feet off rudder, wings carefully level with aileron. Sonra elevator back pressure ile airspeed yavaşça 80 KIAS'a düşürülür ve trim 80 KIAS glide'a ayarlanır. Wings level/constant heading korunur, ardından Emergency Descent Through The Clouds prosedürüne geçilir; VFR'a çıkınca normal cruise'a dönülür.`,
+      steps:['Retard throttle to idle position','Remove feet from rudder pedals','Stop turn by carefully leveling the wings using aileron control','Cautiously apply elevator back pressure to slowly reduce the airspeed to 80 KIAS','Adjust the elevator trim control to maintain an 80 KIAS glide','Use aileron control to maintain wings level and constant heading','Resume Emergency Descent Through The Clouds procedure','Upon breaking out of clouds, resume normal cruising flight']
+    },
+    {
+      id:'full-spin', title:'SPIN RECOVERY',
+      explanation:`Spin recovery'de önce güç azaltılır ve aileronlar neutral yapılır. Sonra rotation yönünün tersine full rudder uygulanır. Rudder stop'a ulaştıktan hemen sonra control wheel stall'ı kıracak kadar briskly forward yapılır. Rotation durana kadar bu girdiler tutulur; durduğunda rudder neutralize edilir ve resulting dive'dan smooth recovery yapılır.`,
+      steps:['RETARD THROTTLE TO IDLE POSITION','PLACE AILERONS IN NEUTRAL POSITION','APPLY AND HOLD FULL RUDDER OPPOSITE TO THE DIRECTION OF ROTATION','JUST AFTER THE RUDDER REACHES THE STOP, MOVE THE CONTROL WHEEL BRISKLY FORWARD FAR ENOUGH TO BREAK THE STALL','HOLD THESE CONTROL INPUTS UNTIL ROTATION STOPS','AS ROTATION STOPS, NEUTRALIZE RUDDER, AND MAKE A SMOOTH RECOVERY FROM THE RESULTING DIVE']
+    },
+    {
+      id:'full-alternator-energize', title:'INSUFFICIENT RATE OF CHARGE — ENERGIZE ALTERNATOR SYSTEM',
+      explanation:`Amplified bölümde alternator nuisance trip ihtimaline karşı üç adımlı bir yeniden enerjilendirme sırası verilir. Önce <strong class="term">MASTER Switch (ALT Only) - OFF</strong>, sonra <strong class="term">ALT FIELD Circuit Breaker - CHECK IN</strong>, ardından <strong class="term">MASTER Switch (ALT Only) - ON</strong>. LOW VOLTS tekrar gelirse bu işlem tekrarlanmaz; electrical load azaltılıp as soon as practical iniş planlanır.`,
+      steps:['MASTER Switch (ALT Only) - OFF','ALT FIELD Circuit Breaker - CHECK IN','MASTER Switch (ALT Only) - ON']
+    }
+
+  ];
+
+  const allProcedures=[...boldProcedures,...fullProcedures];
+  let procedures=boldProcedures;
+  const storageKey='tafa-bold-face-trainer-v2';
+  const $=id=>document.getElementById(id);
+  const homeView=$('homeView'),trainerView=$('trainerView'),statsView=$('statsView'),cards=$('cards'),guideGrid=$('guideGrid'),weakList=$('weakList'),resetOverlay=$('resetOverlay'),reviewOverlay=$('reviewOverlay'),modeOverlay=$('modeOverlay'),htmlEl=document.documentElement;
+  let state=loadState(),current=null,currentIndex=0,locked=false;
 
   function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-  function makeProgress(p){return {completions:0,currentStep:0,mistakes:0,answered:0,correct:0,wrong:0,stepMistakes:Array(p.steps.length).fill(0),perfectRuns:0,status:'idle',runMistakes:0,lastRunMistakes:null}}
-  function makeDefaultProgress(){const o={};procedures.forEach(p=>o[p.id]=makeProgress(p));return o}
-  function makeDefaultAnalytics(){return {todayDate:todayKey(),todayAnswered:0,todayCorrect:0,todayWrong:0,todayCompleted:0,lifetimeAnswered:0,lifetimeCorrect:0,lifetimeWrong:0,lifetimeCompleted:0}}
-  function makeDefaultState(){return {theme:'light',explainOpen:true,progress:makeDefaultProgress(),analytics:makeDefaultAnalytics()}}
-
-  function migrateProgress(p, old={}){
-    const base=makeProgress(p); const m=Object.assign(base,old||{});
-    if(!Array.isArray(m.stepMistakes)) m.stepMistakes=Array(p.steps.length).fill(0);
-    while(m.stepMistakes.length<p.steps.length)m.stepMistakes.push(0);
-    m.stepMistakes=m.stepMistakes.slice(0,p.steps.length).map(v=>Number(v)||0);
-    if(!m.status || !['idle','active','error','mastered'].includes(m.status)){
-      m.status=m.completions>0?'mastered':((m.mistakes||m.wrong||0)>0?'error':(m.currentStep>0?'active':'idle'));
-    }
-    if(typeof m.runMistakes!=='number')m.runMistakes=0;
-    if(typeof m.perfectRuns!=='number')m.perfectRuns=0;
-    return m;
-  }
+  function emptyAnalytics(){return {todayDate:todayKey(),todayAnswered:0,todayCorrect:0,todayWrong:0,todayCompleted:0,lifetimeAnswered:0,lifetimeCorrect:0,lifetimeWrong:0,lifetimeCompleted:0}}
+  function emptyProgress(){const o={};allProcedures.forEach(p=>o[p.id]={completions:0,currentStep:0,mistakes:0,answered:0,correct:0,wrong:0,perfectRuns:0,runMistakes:0,lastRunMistakes:0,status:'idle',stepMistakes:{}});return o}
+  function defaultState(){return {theme:'light',explainOpen:true,mode:null,progress:emptyProgress(),analyticsByMode:{bold:emptyAnalytics(),full:emptyAnalytics()}}}
+  function normalizeProgressItem(x){return Object.assign({completions:0,currentStep:0,mistakes:0,answered:0,correct:0,wrong:0,perfectRuns:0,runMistakes:0,lastRunMistakes:0,status:'idle',stepMistakes:{}},x||{},{stepMistakes:Object.assign({},x?.stepMistakes||{})})}
   function loadState(){
-    const base=makeDefaultState();let raw=null;try{raw=JSON.parse(localStorage.getItem(storageKey)||'null')}catch(e){}
-    if(!raw){try{const legacy=JSON.parse(localStorage.getItem(legacyKey)||'null');if(legacy){procedures.forEach(p=>base.progress[p.id]=migrateProgress(p,legacy[p.id]))}}catch(e){};saveState(base);return normalizeToday(base)}
-    const merged={theme:raw.theme||'light',explainOpen:typeof raw.explainOpen==='boolean'?raw.explainOpen:true,progress:{},analytics:Object.assign(makeDefaultAnalytics(),raw.analytics||{})};
-    procedures.forEach(p=>merged.progress[p.id]=migrateProgress(p,raw.progress?.[p.id]));return normalizeToday(merged)
+    const base=defaultState();let raw=null;try{raw=JSON.parse(localStorage.getItem(storageKey)||'null')}catch(e){}
+    if(!raw)return base;
+    base.theme=raw.theme||'light';base.explainOpen=typeof raw.explainOpen==='boolean'?raw.explainOpen:true;base.mode=raw.mode||null;
+    allProcedures.forEach(p=>base.progress[p.id]=normalizeProgressItem(raw.progress?.[p.id]));
+    if(raw.analyticsByMode){base.analyticsByMode.bold=Object.assign(emptyAnalytics(),raw.analyticsByMode.bold||{});base.analyticsByMode.full=Object.assign(emptyAnalytics(),raw.analyticsByMode.full||{})}
+    else if(raw.analytics){base.analyticsByMode.bold=Object.assign(emptyAnalytics(),raw.analytics)}
+    return normalizeToday(base);
   }
-  function normalizeToday(s){if(s.analytics.todayDate!==todayKey()){s.analytics.todayDate=todayKey();s.analytics.todayAnswered=0;s.analytics.todayCorrect=0;s.analytics.todayWrong=0;s.analytics.todayCompleted=0;saveState(s)}return s}
-  function saveState(next=state){try{localStorage.setItem(storageKey,JSON.stringify(next))}catch(e){}}
-  function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-  const globalStepBank=[...new Set(procedures.flatMap(p=>p.steps))];
-  function escapeHtml(s){return String(s).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
-  function formatText(s){return escapeHtml(s).replace(/\n/g,'<br>')}
+  function normalizeToday(s){for(const m of ['bold','full']){const a=s.analyticsByMode[m];if(a.todayDate!==todayKey()){a.todayDate=todayKey();a.todayAnswered=0;a.todayCorrect=0;a.todayWrong=0;a.todayCompleted=0}}return s}
+  function saveState(){try{localStorage.setItem(storageKey,JSON.stringify(state))}catch(e){}}
+  function analytics(){state=normalizeToday(state);return state.analyticsByMode[state.mode||'bold']}
+  function applyMode(){procedures=state.mode==='full'?fullProcedures:boldProcedures;const full=state.mode==='full';$('brandSubtitle').textContent=full?'Full Emergency Procedures':'Bold Face Memory Trainer';$('modeBtn').textContent=full?'Mod: Full':'Mod: Bold';$('modeBadge').textContent=full?'Full Procedures':'Bold Items';$('heroSubtitle').textContent=full?'POH Section 3 emergency checklist adımlarının tamamını doğru sırayla öğren. Yanlış cevapta aynı prosedürün başına dön.':'Bold face adımlarını doğru sırayla öğren. Yanlış cevapta aynı emergency’nin başına dön.';$('procedureStatLabel').textContent=full?'Prosedür':'Emergency';$('chooseSubtitle').textContent=full?'Bir full procedure seç ve tüm adımları sırayla çalış.':'Bir prosedür seç ve bold item sırasını çalış.';$('statsSubtitle').textContent=(full?'Full Procedures':'Bold Items')+' modu · bugün, tüm zamanlar ve adım bazlı hata geçmişi.';renderHome();renderStats()}
+  function chooseMode(mode){state.mode=mode;saveState();modeOverlay.classList.remove('show');applyMode();showView('home')}
+  function openModePicker(manual=true){$('modeCloseBtn').style.display=manual?'':'none';modeOverlay.classList.add('show')}
 
-  function applyTheme(){htmlEl.setAttribute('data-theme',state.theme==='dark'?'dark':'light');$('themeBtn').textContent=state.theme==='dark'?'☀️ Gündüz modu':'🌙 Gece modu';document.querySelector('meta[name="theme-color"]')?.setAttribute('content',state.theme==='dark'?'#000000':'#f5f5f7')}
+  function applyTheme(){htmlEl.setAttribute('data-theme',state.theme==='dark'?'dark':'light');$('themeBtn').textContent=state.theme==='dark'?'☀️ Gündüz modu':'🌙 Gece modu';document.querySelector('meta[name="theme-color"]').setAttribute('content',state.theme==='dark'?'#000000':'#f5f5f7')}
   function updateExplainVisibility(){$('explainBox').style.display=state.explainOpen?'':'none';$('toggleExplainBtn').textContent=state.explainOpen?'Açıklamayı gizle':'Açıklama'}
-  function dominantError(p){const s=state.progress[p.id];if(!s.stepMistakes?.some(v=>v>0))return null;let idx=0,max=0;s.stepMistakes.forEach((v,i)=>{if(v>max){max=v;idx=i}});return {step:idx+1,count:max}}
-  function totalWrong(s){return Number(s.wrong||s.mistakes||0)}
+  function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  function globalStepBank(){return [...new Set(procedures.flatMap(p=>p.steps))]}
+  function totalWrong(s){return s.wrong||s.mistakes||0}
+  function dominantError(p){const m=state.progress[p.id]?.stepMistakes||{};let best=null;Object.entries(m).forEach(([k,v])=>{if(v>0&&(!best||v>best.count))best={step:Number(k)+1,count:v}});return best}
 
-  function renderToday(){state=normalizeToday(state);const a=state.analytics, accuracy=a.todayAnswered?Math.round((a.todayCorrect/a.todayAnswered)*100):null;$('todayAnsweredHome').textContent=a.todayAnswered;$('todayCorrectHome').textContent=a.todayCorrect;$('todayWrongHome').textContent=a.todayWrong;$('todayAccuracyHome').textContent=accuracy===null?'—':`${accuracy}%`;$('todayLine').textContent=a.todayAnswered?`${a.todayCompleted} tur tamamlandı · ${a.todayWrong===0?'hatasız gidiyor':'hata geçmişi kaydediliyor'}`:'Bugün henüz soru çözmedin.'}
+  const sectionOrder=['engine','landing','fire','weather','electrical','instruments','automation','recovery','cabin'];
+  const sectionInfo={
+    engine:{label:'Engine & Power',sub:'Engine failure, restart ve fuel-related procedures'},
+    landing:{label:'Forced & Abnormal Landing',sub:'Forced landing, precautionary, ditching ve tire procedures'},
+    fire:{label:'Fire',sub:'Ground, engine, electrical, cabin ve wing fire procedures'},
+    weather:{label:'Weather & Icing',sub:'Icing encounter procedures'},
+    electrical:{label:'Electrical',sub:'High/low voltage ve alternator procedures'},
+    instruments:{label:'Flight Instruments',sub:'Static, ADC/AHRS, vacuum ve cloud procedures'},
+    automation:{label:'Autopilot & Trim',sub:'Autopilot ve electric trim malfunction'},
+    recovery:{label:'Upset Recovery',sub:'Spin ve unusual-attitude recovery'},
+    cabin:{label:'Cabin Safety',sub:'CO advisory procedures'}
+  };
+  function categoryKey(p){
+    if(state.mode!=='full'){const c=(p.category||'').toLowerCase();if(c.includes('fire'))return'fire';if(c.includes('icing'))return'weather';if(c.includes('autopilot')||c.includes('trim'))return'automation';if(c.includes('instrument')||c.includes('system'))return'instruments';if(c.includes('co')||c.includes('cabin'))return'cabin';if(c.includes('engine'))return'engine';return'recovery'}
+    const id=p.id;
+    if(['full-takeoff-roll','full-after-takeoff','full-restart-flight','full-fuel-vapor'].includes(id))return'engine';
+    if(['full-emergency-landing-no-power','full-precautionary-landing','full-ditching','full-flat-main','full-flat-nose'].includes(id))return'landing';
+    if(['full-start-fire-starts','full-start-fire-fails','full-engine-fire','full-electrical-fire','full-electrical-fire-restore','full-cabin-fire','full-wing-fire'].includes(id))return'fire';
+    if(id==='full-icing')return'weather';
+    if(['full-high-volts','full-low-volts-low-rpm','full-low-volts-high-rpm','full-low-volts-remains','full-alternator-energize'].includes(id))return'electrical';
+    if(['full-static','full-redx-airspeed','full-redx-altitude','full-redx-attitude','full-redx-hsi','full-low-vacuum','full-cloud-180','full-cloud-descent','full-spiral-clouds'].includes(id))return'instruments';
+    if(id==='full-ap-ptrm')return'automation';
+    if(id==='full-spin')return'recovery';
+    if(id==='full-co-high')return'cabin';
+    return'instruments';
+  }
+  function iconSvg(key){
+    const common='fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"';
+    const paths={
+      engine:'<path d="M5 9h2l2-3h6l2 3h2v8h-2l-2 2H9l-2-2H5z"/><path d="M10 9v4m4-4v4M3 11v4m18-4v4"/>',
+      landing:'<path d="M3 17h18"/><path d="M7 14l3-8h4l3 8M8 11h8"/>',
+      fire:'<path d="M13 3c1 4-2 5-2 8 0 1.7 1.3 3 3 3 2.3 0 4-2 3.3-4.5C20 11 21 13 21 15.5A7.5 7.5 0 0 1 6 15c0-3 2-5.5 5-8-.2 2 1 3 2 3 1.2 0 2-1.1 0-7z"/>',
+      weather:'<path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9M8.5 5l3.5 2 3.5-2M8.5 19l3.5-2 3.5 2"/>',
+      electrical:'<path d="M13 2 6 13h5l-1 9 8-12h-5z"/>',
+      instruments:'<circle cx="12" cy="12" r="8"/><path d="M12 12l4-3M7 16h10"/>',
+      automation:'<path d="M5 17V7m14 10V7M8 12h8"/><circle cx="12" cy="12" r="3"/>',
+      recovery:'<path d="M4 14c3-7 10-9 16-5"/><path d="m17 6 3 3-3 3"/><path d="M5 18h14"/>',
+      cabin:'<path d="M4 17h16M6 17V9l3-3h6l3 3v8M9 11h6"/>'
+    };
+    return `<svg ${common}>${paths[key]||paths.instruments}</svg>`;
+  }
+  function buildProcedureCard(p){
+    const s=state.progress[p.id];let cls='idle',pct=0,status='Başlamak için dokun';if(s.status==='mastered'||(s.perfectRuns||0)>0){cls='mastered';pct=100;status='Perfect · tamamlandı'}else if(s.status==='error'||totalWrong(s)>0){cls='error';pct=Math.max(16,Math.round((s.currentStep/p.steps.length)*100));status='Tekrar gerekli'}else if(s.currentStep>0){cls='active';pct=Math.round((s.currentStep/p.steps.length)*100);status=`${s.currentStep} / ${p.steps.length} ilerleme`}
+    const key=categoryKey(p),b=document.createElement('button');b.className='card';b.innerHTML=`<div class="cardtop">${s.perfectRuns>0?`<span class="tag perfect">✓ Perfect ${s.perfectRuns}×</span>`:(totalWrong(s)>0?'<span class="tag review">Review</span>':'')}<span class="tag">${p.steps.length} adım</span></div><div class="cardTitleRow"><span class="cardIcon">${iconSvg(key)}</span><h3>${escapeHtml(p.title)}</h3></div><div class="cardbottom"><div class="statusBlock"><span class="steps">${status}</span><div class="miniProgress ${cls}"><span style="width:${pct}%"></span></div></div><button type="button" class="quickBtn">Quick Review</button></div>`;
+    b.addEventListener('click',e=>{if(e.target.closest('.quickBtn')){e.stopPropagation();openQuickReview(p.id)}else openProcedure(p.id)});return b
+  }
 
   function renderHome(){
-    cards.innerHTML='';
-    procedures.forEach(p=>{const s=state.progress[p.id];let cls='idle',pct=0,statusText='Başlamak için dokun';
-      if(s.status==='error'){cls='error';pct=100;statusText=s.completions>0?'Review needed':'Hata yapıldı · tekrar et'}
-      else if(s.status==='mastered'){cls='mastered';pct=100;statusText=s.perfectRuns>0?`Perfect Run × ${s.perfectRuns}`:'Tamamlandı'}
-      else if(s.currentStep>0){cls='active';pct=Math.round((s.currentStep/p.steps.length)*100);statusText=`${s.currentStep} / ${p.steps.length} ilerleme`}
-      const el=document.createElement('article');el.className='card';el.tabIndex=0;el.setAttribute('role','button');el.innerHTML=`<div class="cardtop">${s.status==='error'?'<span class="tag review">Review</span>':''}${s.perfectRuns>0?`<span class="tag perfect">Perfect × ${s.perfectRuns}</span>`:''}<span class="tag">${p.steps.length} adım</span></div><h3>${escapeHtml(p.title)}</h3><div class="cardbottom"><div class="statusBlock"><span class="steps">${statusText}</span><div class="miniProgress ${cls}"><span style="width:${pct}%"></span></div></div><button class="quickBtn" type="button">Quick Review</button></div>`;
-      el.addEventListener('click',()=>openProcedure(p.id));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProcedure(p.id)}});el.querySelector('.quickBtn').addEventListener('click',e=>{e.stopPropagation();openQuickReview(p.id)});cards.appendChild(el)
-    });
-    renderWeakAreas();renderGuide();updateSummary();renderToday();
+    const a=analytics();cards.innerHTML='';
+    if(state.mode==='full'){
+      cards.className='procedureSections';const groups={};procedures.forEach(p=>{const k=categoryKey(p);(groups[k]||(groups[k]=[])).push(p)});
+      sectionOrder.forEach(k=>{if(!groups[k]?.length)return;const wrap=document.createElement('div');wrap.className='procedureSection';const meta=sectionInfo[k];wrap.innerHTML=`<div class="procedureSectionHead"><span class="sectionIcon">${iconSvg(k)}</span><div class="procedureSectionHeadText"><b>${meta.label}</b><span>${meta.sub} · ${groups[k].length} prosedür</span></div></div><div class="grid"></div>`;const g=wrap.querySelector('.grid');groups[k].forEach(p=>g.appendChild(buildProcedureCard(p)));cards.appendChild(wrap)});
+    }else{cards.className='grid';procedures.forEach(p=>cards.appendChild(buildProcedureCard(p)))}
+    $('totalProcedures').textContent=procedures.length;$('masteredCount').textContent=procedures.filter(p=>(state.progress[p.id].perfectRuns||0)>0).length;$('totalPerfects').textContent=procedures.reduce((n,p)=>n+(state.progress[p.id].perfectRuns||0),0);$('todayAnsweredMini').textContent=a.todayAnswered;$('todayAnsweredHome').textContent=a.todayAnswered;$('todayCorrectHome').textContent=a.todayCorrect;$('todayWrongHome').textContent=a.todayWrong;$('todayAccuracyHome').textContent=a.todayAnswered?Math.round(a.todayCorrect/a.todayAnswered*100)+'%':'—';$('todayLine').textContent=a.todayAnswered?`${a.todayCorrect} doğru · ${a.todayWrong} yanlış · ${a.todayCompleted} tur`:'Bugün henüz soru çözmedin';renderWeak();renderGuide()
   }
-
-  function renderWeakAreas(){const list=$('weakList');list.innerHTML='';const ranked=procedures.map(p=>({p,s:state.progress[p.id],d:dominantError(p)})).filter(x=>totalWrong(x.s)>0).sort((a,b)=>totalWrong(b.s)-totalWrong(a.s)).slice(0,3);if(!ranked.length){list.innerHTML='<div class="emptyWeak">Henüz weak area yok. Yanlış yaptığın adımlar burada otomatik görünecek.</div>';return}ranked.forEach((x,i)=>{const row=document.createElement('div');row.className='weakRow';row.innerHTML=`<div class="weakRank">${i+1}</div><div class="weakMain"><b>${escapeHtml(x.p.title)}</b><span>${x.d?`En çok ${x.d.step}. adımda hata · ${x.d.count} kez`:'Eski hata kaydı var; adım geçmişi yeni sürümden itibaren tutuluyor.'}</span></div><div class="weakCount">${totalWrong(x.s)} yanlış</div>`;row.addEventListener('click',()=>openProcedure(x.p.id));list.appendChild(row)})}
+  function renderWeak(){const ranked=procedures.map(p=>({p,s:state.progress[p.id],w:totalWrong(state.progress[p.id]),d:dominantError(p)})).filter(x=>x.w>0).sort((a,b)=>b.w-a.w).slice(0,3);weakList.innerHTML='';if(!ranked.length){weakList.innerHTML='<div class="emptyWeak">Henüz weak area yok. Hata yaptıkça burada en çok zorlandığın prosedürler görünecek.</div>';return}ranked.forEach((x,i)=>{const r=document.createElement('div');r.className='weakRow';r.innerHTML=`<div class="weakRank">${i+1}</div><div class="weakMain"><b>${escapeHtml(x.p.title)}</b><span>${x.d?`En çok ${x.d.step}. adımda hata · ${x.d.count}×`:'Hata geçmişi var'}</span></div><div class="weakCount">${x.w} yanlış</div>`;r.addEventListener('click',()=>openProcedure(x.p.id));weakList.appendChild(r)})}
   function renderGuide(){guideGrid.innerHTML='';procedures.forEach(p=>{const d=document.createElement('details');d.innerHTML=`<summary>${escapeHtml(p.title)} <span>${p.steps.length} adım</span></summary><div class="guideContent">${p.explanation}</div>`;guideGrid.appendChild(d)})}
-  function updateSummary(){const mastered=procedures.filter(p=>state.progress[p.id].status==='mastered').length;const perfects=procedures.reduce((n,p)=>n+(state.progress[p.id].perfectRuns||0),0);$('totalProcedures').textContent=procedures.length;$('masteredCount').textContent=mastered;$('totalPerfects').textContent=perfects;$('todayAnsweredMini').textContent=state.analytics.todayAnswered}
 
-  function openQuickReview(id){const p=procedures.find(x=>x.id===id);if(!p)return;$('reviewTitle').textContent=p.title;$('reviewLogic').innerHTML=p.explanation;const wrap=$('reviewSteps');wrap.innerHTML='';p.steps.forEach((step,i)=>{const r=document.createElement('div');r.className='quickStep';r.innerHTML=`<span class="quickStepNum">${i+1}.</span><span class="quickStepText">${formatText(step)}</span>`;wrap.appendChild(r)});reviewOverlay.classList.add('show')}
+  function openQuickReview(id){const p=procedures.find(x=>x.id===id);if(!p)return;$('reviewTitle').textContent=p.title;$('reviewLogic').innerHTML=p.explanation;const w=$('reviewSteps');w.innerHTML='';p.steps.forEach((s,i)=>{const r=document.createElement('div');r.className='quickStep';r.innerHTML=`<span class="quickStepNum">${i+1}.</span><span class="quickStepText">${formatText(s)}</span>`;w.appendChild(r)});reviewOverlay.classList.add('show')}
   function closeQuickReview(){reviewOverlay.classList.remove('show')}
-
-  function openProcedure(id){current=procedures.find(p=>p.id===id);if(!current)return;const s=state.progress[id];currentIndex=Math.min(Math.max(0,s.currentStep||0),current.steps.length-1);if(s.currentStep>=current.steps.length)currentIndex=0;showView('trainer');$('trainerTitle').textContent=current.title;$('trainerSubtitle').textContent='Doğru sırayı kur. Yanlış cevap verirsen bu emergency 1. adıma döner.';$('explainText').innerHTML=current.explanation;$('completePanel').classList.remove('show');$('questionArea').style.display='';updateExplainVisibility();renderQuestion();window.scrollTo({top:0,behavior:'auto'})}
-  function errorHistoryText(){if(!current)return 'Henüz hata yok';const d=dominantError(current);return d?`En çok hata: ${d.step}. adım · ${d.count}×`:'Henüz adım bazlı hata yok'}
-  function renderQuestion(){if(!current)return;locked=false;$('feedback').className='feedback';$('feedback').textContent='';$('stepCounter').textContent=`${currentIndex+1} / ${current.steps.length}`;$('progressText').textContent=`${currentIndex} / ${current.steps.length} adım tamam`;$('mistakeText').textContent=errorHistoryText();const bar=$('progressBar');bar.classList.toggle('error',state.progress[current.id].status==='error');bar.style.width=`${(currentIndex/current.steps.length)*100}%`;$('questionText').textContent=`${currentIndex+1}. adım hangisi?`;renderCompleted();renderChoices()}
-  function renderCompleted(){const list=$('completedList');list.innerHTML='';for(let i=0;i<currentIndex;i++){const item=document.createElement('div');item.className='doneItem';item.innerHTML=`<span class="doneNum">${i+1}</span><span>${formatText(current.steps[i])}</span>`;list.appendChild(item)}}
-  function buildOptions(){const correct=current.steps[currentIndex],candidates=[];current.steps.forEach((step,idx)=>{if(step!==correct)candidates.push({step,distance:Math.abs(idx-currentIndex)})});candidates.sort((a,b)=>a.distance-b.distance);const picked=[];for(const c of candidates){if(picked.length>=2)break;if(!picked.includes(c.step))picked.push(c.step)}const pool=shuffle(globalStepBank.filter(s=>s!==correct&&!picked.includes(s)));while(picked.length<3&&pool.length)picked.push(pool.pop());return shuffle([correct,...picked])}
-  function renderChoices(){const wrap=$('choices');wrap.innerHTML='';const correct=current.steps[currentIndex];buildOptions().forEach(text=>{const b=document.createElement('button');b.className='choice';b.innerHTML=formatText(text);b.addEventListener('click',()=>answer(b,text===correct));wrap.appendChild(b)})}
-
-  function recordAnswer(isCorrect){state=normalizeToday(state);const p=state.progress[current.id];p.answered=(p.answered||0)+1;state.analytics.todayAnswered++;state.analytics.lifetimeAnswered++;if(isCorrect){p.correct=(p.correct||0)+1;state.analytics.todayCorrect++;state.analytics.lifetimeCorrect++}else{p.wrong=(p.wrong||0)+1;p.mistakes=(p.mistakes||0)+1;p.stepMistakes[currentIndex]=(p.stepMistakes[currentIndex]||0)+1;p.runMistakes=(p.runMistakes||0)+1;p.status='error';state.analytics.todayWrong++;state.analytics.lifetimeWrong++}}
-  function answer(btn,isCorrect){if(locked)return;locked=true;[...$('choices').querySelectorAll('button')].forEach(b=>b.disabled=true);recordAnswer(isCorrect);const p=state.progress[current.id];if(isCorrect){btn.classList.add('correct');$('feedback').textContent='Doğru. Sıradaki adıma geçiyorsun.';$('feedback').className='feedback good show';setTimeout(()=>{currentIndex++;p.currentStep=currentIndex;if(p.status==='idle')p.status='active';saveState();if(currentIndex>=current.steps.length)completeProcedure();else renderQuestion()},420)}else{btn.classList.add('wrong');p.currentStep=0;saveState();resetOverlay.classList.add('show');$('resetMessage').textContent=`${current.title}: ${currentIndex+1}. adım hata geçmişine eklendi. 1. adımdan yeniden başlıyor.`;setTimeout(()=>{currentIndex=0;resetOverlay.classList.remove('show');renderQuestion()},950)}}
-
-  function completeProcedure(){const p=state.progress[current.id],runMistakes=p.runMistakes||0,perfect=runMistakes===0;p.completions=(p.completions||0)+1;p.lastRunMistakes=runMistakes;p.currentStep=0;p.status=perfect?'mastered':'error';if(perfect)p.perfectRuns=(p.perfectRuns||0)+1;p.runMistakes=0;state.analytics.todayCompleted++;state.analytics.lifetimeCompleted++;saveState();$('questionArea').style.display='none';const bar=$('progressBar');bar.classList.toggle('error',!perfect);bar.style.width='100%';$('progressText').textContent=`${current.steps.length} / ${current.steps.length} adım tamam`;$('stepCounter').textContent=`${current.steps.length} / ${current.steps.length}`;$('completionKicker').textContent=perfect?'Perfect Run':'Completed';$('completeTitle').textContent=perfect?'Perfect Run.':'Tur tamamlandı.';$('completeText').textContent=perfect?'Tüm bold item’ları tek hata yapmadan doğru sırayla tamamladın.':`Turu tamamladın; bu turda ${runMistakes} yanlış yaptın. Kart kırmızı kalacak. Perfect Run yaptığında yeşile dönecek.`;$('completeStats').innerHTML=`<span class="completeChip ${perfect?'good':'bad'}">${perfect?'0 yanlış':runMistakes+' yanlış'}</span><span class="completeChip">${current.steps.length}/${current.steps.length} adım</span><span class="completeChip">Perfect toplamı: ${p.perfectRuns||0}</span>`;const review=$('sequenceReview');review.innerHTML='';current.steps.forEach((step,i)=>{const row=document.createElement('div');row.className='reviewItem';row.innerHTML=`<span class="reviewNum">${i+1}.</span><span>${formatText(step)}</span>`;review.appendChild(row)});$('completePanel').classList.add('show');updateSummary()}
+  function openProcedure(id){current=procedures.find(p=>p.id===id);if(!current)return;const s=state.progress[id];currentIndex=Math.min(Math.max(0,s.currentStep||0),current.steps.length-1);if(s.currentStep>=current.steps.length)currentIndex=0;showView('trainer');$('trainerTitle').textContent=current.title;$('trainerSubtitle').textContent='Doğru sırayı kur. Yanlış cevap verirsen bu prosedür 1. adıma döner.';$('explainText').innerHTML=current.explanation;$('completePanel').classList.remove('show');$('questionArea').style.display='';updateExplainVisibility();renderQuestion();window.scrollTo({top:0,behavior:'auto'})}
+  function errorHistoryText(){const d=current?dominantError(current):null;return d?`En çok hata: ${d.step}. adım · ${d.count}×`:'Henüz adım bazlı hata yok'}
+  function renderQuestion(){if(!current)return;locked=false;$('feedback').className='feedback';$('feedback').textContent='';$('stepCounter').textContent=`${currentIndex+1} / ${current.steps.length}`;$('progressText').textContent=`${currentIndex} / ${current.steps.length} adım tamam`;$('mistakeText').textContent=errorHistoryText();const bar=$('progressBar');bar.classList.toggle('error',state.progress[current.id].status==='error');bar.style.width=`${currentIndex/current.steps.length*100}%`;$('questionText').textContent=`${currentIndex+1}. adım hangisi?`;renderCompleted();renderChoices()}
+  function renderCompleted(){const l=$('completedList');l.innerHTML='';for(let i=0;i<currentIndex;i++){const x=document.createElement('div');x.className='doneItem';x.innerHTML=`<span class="doneNum">${i+1}</span><span>${formatText(current.steps[i])}</span>`;l.appendChild(x)}}
+  function buildOptions(){const correct=current.steps[currentIndex],near=[];current.steps.forEach((s,i)=>{if(s!==correct)near.push({s,d:Math.abs(i-currentIndex)})});near.sort((a,b)=>a.d-b.d);const picked=[];for(const x of near){if(picked.length>=2)break;if(!picked.includes(x.s))picked.push(x.s)}const pool=shuffle(globalStepBank().filter(s=>s!==correct&&!picked.includes(s)));while(picked.length<3&&pool.length)picked.push(pool.pop());return shuffle([correct,...picked])}
+  function renderChoices(){const w=$('choices');w.innerHTML='';const correct=current.steps[currentIndex];buildOptions().forEach(t=>{const b=document.createElement('button');b.className='choice';b.innerHTML=formatText(t);b.addEventListener('click',()=>answer(b,t===correct));w.appendChild(b)})}
+  function recordAnswer(ok){const a=analytics(),p=state.progress[current.id];p.answered++;a.todayAnswered++;a.lifetimeAnswered++;if(ok){p.correct++;a.todayCorrect++;a.lifetimeCorrect++}else{p.wrong++;p.mistakes++;p.stepMistakes[currentIndex]=(p.stepMistakes[currentIndex]||0)+1;p.runMistakes++;p.status='error';a.todayWrong++;a.lifetimeWrong++}}
+  function answer(btn,ok){if(locked)return;locked=true;[...$('choices').querySelectorAll('button')].forEach(b=>b.disabled=true);recordAnswer(ok);const p=state.progress[current.id];if(ok){btn.classList.add('correct');$('feedback').textContent='Doğru. Sıradaki adıma geçiyorsun.';$('feedback').className='feedback good show';setTimeout(()=>{currentIndex++;p.currentStep=currentIndex;if(p.status==='idle')p.status='active';saveState();if(currentIndex>=current.steps.length)completeProcedure();else renderQuestion()},380)}else{btn.classList.add('wrong');const pw=document.querySelector('.progressWrap');pw.classList.remove('errorPulse');void pw.offsetWidth;pw.classList.add('errorPulse');p.currentStep=0;saveState();resetOverlay.classList.add('show');$('resetMessage').textContent=`${current.title}: ${currentIndex+1}. adım hata geçmişine eklendi. 1. adımdan yeniden başlıyor.`;setTimeout(()=>{pw.classList.remove('errorPulse');currentIndex=0;resetOverlay.classList.remove('show');renderQuestion()},900)}}
+  function completeProcedure(){const p=state.progress[current.id],a=analytics(),mist=p.runMistakes||0,perfect=mist===0;p.completions++;p.lastRunMistakes=mist;p.currentStep=0;p.status=perfect?'mastered':'error';if(perfect)p.perfectRuns++;p.runMistakes=0;a.todayCompleted++;a.lifetimeCompleted++;saveState();$('questionArea').style.display='none';const bar=$('progressBar');bar.classList.toggle('error',!perfect);bar.style.width='100%';$('progressText').textContent=`${current.steps.length} / ${current.steps.length} adım tamam`;$('stepCounter').textContent=`${current.steps.length} / ${current.steps.length}`;$('completionKicker').textContent=perfect?'Perfect Run':'Completed';$('completeTitle').textContent=perfect?'Perfect Run.':'Tur tamamlandı.';$('completeText').textContent=perfect?'Tüm adımları tek hata yapmadan doğru sırayla tamamladın.':`Turu tamamladın; bu turda ${mist} yanlış yaptın. Kart kırmızı kalacak. Perfect Run yaptığında yeşile dönecek.`;$('completeStats').innerHTML=`<span class="completeChip ${perfect?'good':'bad'}">${perfect?'0 yanlış':mist+' yanlış'}</span><span class="completeChip">${current.steps.length}/${current.steps.length} adım</span><span class="completeChip">Perfect toplamı: ${p.perfectRuns}</span>`;const r=$('sequenceReview');r.innerHTML='';current.steps.forEach((s,i)=>{const x=document.createElement('div');x.className='reviewItem';x.innerHTML=`<span class="reviewNum">${i+1}.</span><span>${formatText(s)}</span>`;r.appendChild(x)});const ci=document.querySelector('.completeIcon');ci.classList.remove('successPop');void ci.offsetWidth;ci.classList.add('successPop');$('completePanel').classList.add('show');renderHome()}
   function repeatCurrent(){if(!current)return;const p=state.progress[current.id];currentIndex=0;p.currentStep=0;p.runMistakes=0;if(p.status!=='mastered')p.status='idle';saveState();$('completePanel').classList.remove('show');$('questionArea').style.display='';renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}
 
-  function showView(name){homeView.classList.remove('active');trainerView.classList.remove('active');statsView.classList.remove('active');if(name==='home')homeView.classList.add('active');if(name==='trainer')trainerView.classList.add('active');if(name==='stats')statsView.classList.add('active')}
+  function showView(n){homeView.classList.remove('active');trainerView.classList.remove('active');statsView.classList.remove('active');if(n==='home')homeView.classList.add('active');if(n==='trainer')trainerView.classList.add('active');if(n==='stats')statsView.classList.add('active')}
   function goHome(){current=null;$('completePanel').classList.remove('show');$('questionArea').style.display='';renderHome();renderStats();showView('home');window.scrollTo({top:0,behavior:'auto'})}
   function openStats(){renderStats();showView('stats');window.scrollTo({top:0,behavior:'auto'})}
-  function renderStats(){state=normalizeToday(state);const a=state.analytics;$('todayDateText').textContent=new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});$('todayAnswered').textContent=a.todayAnswered;$('todayCorrect').textContent=a.todayCorrect;$('todayWrong').textContent=a.todayWrong;$('todayCompleted').textContent=a.todayCompleted;$('lifeAnswered').textContent=a.lifetimeAnswered;$('lifeCorrect').textContent=a.lifetimeCorrect;$('lifeWrong').textContent=a.lifetimeWrong;$('lifeCompleted').textContent=a.lifetimeCompleted;const t=$('statsTable');t.innerHTML='<div class="historyRow head"><div>Emergency</div><div>Tur</div><div>Perfect</div><div>En çok hata</div><div>Doğru / Soru</div></div>';procedures.forEach(p=>{const s=state.progress[p.id],d=dominantError(p),row=document.createElement('div');row.className='historyRow';row.innerHTML=`<div class="procName">${escapeHtml(p.title)}</div><div>${s.completions||0}</div><div>${s.perfectRuns||0}</div><div class="${d?'historyError':''}">${d?`${d.step}. adım · ${d.count}×`:(totalWrong(s)>0?'Adım verisi yok':'—')}</div><div>${s.correct||0} / ${s.answered||0}</div>`;t.appendChild(row)})}
+  function renderStats(){const a=analytics();$('todayDateText').textContent=new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});$('todayAnswered').textContent=a.todayAnswered;$('todayCorrect').textContent=a.todayCorrect;$('todayWrong').textContent=a.todayWrong;$('todayCompleted').textContent=a.todayCompleted;$('lifeAnswered').textContent=a.lifetimeAnswered;$('lifeCorrect').textContent=a.lifetimeCorrect;$('lifeWrong').textContent=a.lifetimeWrong;$('lifeCompleted').textContent=a.lifetimeCompleted;const t=$('statsTable');t.innerHTML='<div class="historyRow head"><div>Emergency</div><div>Tur</div><div>Perfect</div><div>En çok hata</div><div>Doğru / Soru</div></div>';procedures.forEach(p=>{const s=state.progress[p.id],d=dominantError(p),row=document.createElement('div');row.className='historyRow';row.innerHTML=`<div class="procName">${escapeHtml(p.title)}</div><div>${s.completions}</div><div>${s.perfectRuns}</div><div class="${d?'historyError':''}">${d?`${d.step}. adım · ${d.count}×`:(totalWrong(s)>0?'Adım verisi yok':'—')}</div><div>${s.correct} / ${s.answered}</div>`;t.appendChild(row)})}
   function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';applyTheme();saveState()}
   function toggleExplain(){state.explainOpen=!state.explainOpen;updateExplainVisibility();saveState()}
-  function resetAll(){if(!confirm('Tüm ilerleme, Perfect Run ve hata geçmişi sıfırlansın mı?'))return;state=makeDefaultState();applyTheme();saveState();current=null;renderHome();renderStats();showView('home')}
+  function resetAll(){if(!confirm('Bu moddaki ilerleme, Perfect Run ve hata geçmişi sıfırlansın mı?'))return;const ids=new Set(procedures.map(p=>p.id));ids.forEach(id=>state.progress[id]=normalizeProgressItem(null));state.analyticsByMode[state.mode||'bold']=emptyAnalytics();saveState();renderHome();renderStats();showView('home')}
+  function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+  function formatText(s){return escapeHtml(s).replace(/\n/g,'<br>')}
 
-  $('backBtn').addEventListener('click',goHome);$('menuBtn').addEventListener('click',goHome);$('repeatBtn').addEventListener('click',repeatCurrent);$('resetAllBtn').addEventListener('click',resetAll);$('statsBtn').addEventListener('click',openStats);$('statsBackBtn').addEventListener('click',goHome);$('themeBtn').addEventListener('click',toggleTheme);$('toggleExplainBtn').addEventListener('click',toggleExplain);$('closeReviewBtn').addEventListener('click',closeQuickReview);reviewOverlay.addEventListener('click',e=>{if(e.target===reviewOverlay)closeQuickReview()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(reviewOverlay.classList.contains('show'))closeQuickReview();else goHome();return}if(!current||locked||!trainerView.classList.contains('active'))return;const n=Number(e.key);if(n>=1&&n<=4){const bs=[...$('choices').querySelectorAll('button')];if(bs[n-1])bs[n-1].click()}});
-  applyTheme();updateExplainVisibility();renderHome();renderStats();
+  $('backBtn').addEventListener('click',goHome);$('menuBtn').addEventListener('click',goHome);$('repeatBtn').addEventListener('click',repeatCurrent);$('statsBtn').addEventListener('click',openStats);$('statsBackBtn').addEventListener('click',goHome);$('themeBtn').addEventListener('click',toggleTheme);$('toggleExplainBtn').addEventListener('click',toggleExplain);$('resetAllBtn').addEventListener('click',resetAll);$('modeBtn').addEventListener('click',()=>openModePicker(true));$('modeCloseBtn').addEventListener('click',()=>modeOverlay.classList.remove('show'));document.querySelectorAll('.modeChoice').forEach(b=>b.addEventListener('click',()=>chooseMode(b.dataset.mode)));$('closeReviewBtn').addEventListener('click',closeQuickReview);reviewOverlay.addEventListener('click',e=>{if(e.target===reviewOverlay)closeQuickReview()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(reviewOverlay.classList.contains('show'))closeQuickReview();else if(modeOverlay.classList.contains('show')&&state.mode)modeOverlay.classList.remove('show');else goHome();return}if(!current||locked||!trainerView.classList.contains('active'))return;const n=Number(e.key);if(n>=1&&n<=4){const bs=[...$('choices').querySelectorAll('button')];if(bs[n-1])bs[n-1].click()}});
+
+  applyTheme();updateExplainVisibility();if(state.mode)applyMode();else{state.mode='bold';applyMode();state.mode=null;openModePicker(false)}
 })();
 </script>
 <script>
